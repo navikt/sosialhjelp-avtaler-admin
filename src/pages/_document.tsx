@@ -1,6 +1,16 @@
-import Document, {Html, Head, Main, NextScript, DocumentContext, DocumentInitialProps} from "next/document";
-import Decorator, {DecoratorFetchProps} from '@navikt/nav-dekoratoren-moduler'
-import {DecoratorComponents, fetchDecoratorReact} from "@navikt/nav-dekoratoren-moduler/ssr";
+import Document, {
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentContext,
+  DocumentInitialProps,
+} from "next/document";
+import { DecoratorFetchProps } from "@navikt/nav-dekoratoren-moduler";
+import {
+  DecoratorComponents,
+  fetchDecoratorReact,
+} from "@navikt/nav-dekoratoren-moduler/ssr";
 
 interface Props {
   Decorator: DecoratorComponents;
@@ -15,10 +25,11 @@ function createDecoratorEnv(ctx: DocumentContext): "dev" | "prod" {
     case "prod":
       return "prod";
     default:
-      throw new Error(`Unknown runtime environment: ${process.env.DEKORATOR_MILJO}`);
+      throw new Error(
+        `Unknown runtime environment: ${process.env.DEKORATOR_MILJO}`,
+      );
   }
 }
-
 
 const decoratorParams = (ctx: DocumentContext): DecoratorFetchProps => ({
   env: createDecoratorEnv(ctx),
@@ -35,19 +46,21 @@ const decoratorParams = (ctx: DocumentContext): DecoratorFetchProps => ({
 });
 
 class MyDocument extends Document<Props> {
-  static async getInitialProps(ctx: DocumentContext): Promise<DocumentInitialProps & Props> {
+  static async getInitialProps(
+    ctx: DocumentContext,
+  ): Promise<DocumentInitialProps & Props> {
     const initialProps = await Document.getInitialProps(ctx);
 
     const props = decoratorParams(ctx);
     const Decorator = await fetchDecoratorReact(props);
 
-    return {...initialProps, Decorator};
+    return { ...initialProps, Decorator };
   }
 
   render(): React.JSX.Element {
-    const {Decorator, language} = this.props;
+    const { Decorator } = this.props;
     return (
-      <Html lang={language || "no"}>
+      <Html>
         <Head>
           <Decorator.Styles />
           <link
@@ -57,14 +70,18 @@ class MyDocument extends Document<Props> {
             type="font/woff2"
             crossOrigin="anonymous"
           />
-          <link rel="icon" href="https://www.nav.no/favicon.ico" type="image/x-icon" />
+          <link
+            rel="icon"
+            href="https://www.nav.no/favicon.ico"
+            type="image/x-icon"
+          />
         </Head>
         <body>
-        <Decorator.Header />
-        <Main />
-        <Decorator.Footer />
-        <Decorator.Scripts />
-        <NextScript />
+          <Decorator.Header />
+          <Main />
+          <Decorator.Footer />
+          <Decorator.Scripts />
+          <NextScript />
         </body>
       </Html>
     );
