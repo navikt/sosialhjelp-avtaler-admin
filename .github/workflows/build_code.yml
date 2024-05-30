@@ -1,0 +1,26 @@
+name: "Build code and run tests"
+on:
+  push:
+    branches:
+      - "**" # Build all branches
+    tags-ignore:
+      - "**" # Don't build any tags
+  workflow_dispatch:
+
+jobs:
+  build_code:
+    name: "Build Code and run Tests"
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Build npm project and run Tests"
+        uses: navikt/sosialhjelp-ci/actions/build-npm@main
+        with:
+          node-version: 20
+          build-less: "false"
+          reader-token: ${{ secrets.READER_TOKEN }}

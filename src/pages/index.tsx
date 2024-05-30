@@ -8,15 +8,14 @@ import {
   Page,
   Tag,
   VStack,
-  Link as DsLink,
 } from "@navikt/ds-react";
 import styles from "../styles/Home.module.css";
-import { FileIcon } from "@navikt/aksel-icons";
+import { FileIcon, TrashIcon } from "@navikt/aksel-icons";
 import { useRef } from "react";
 import NyAvtalemalModal from "@/components/modal/NyAvtalemalModal";
-import { useRouter } from "next/router";
 import { Avtalemal } from "@/types/Avtalemal";
 import Link from "next/link";
+import useMutations from "@/hooks/useMutations";
 
 interface Props {
   avtalemaler: Avtalemal[];
@@ -25,46 +24,7 @@ interface Props {
 export default function Home({ avtalemaler }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
 
-  const router = useRouter();
-  const postNyAvtalemal = async (formData: FormData) => {
-    const response = await fetch("/api/sosialhjelp/avtaler-api/api/avtalemal", {
-      method: "POST",
-      body: formData,
-    });
-    if (response.status < 300) {
-      await router.replace(router.asPath);
-    } else {
-      console.error(
-        "Failed to create avtalemal, status: ",
-        response.status,
-        " - ",
-        response.statusText,
-        ", message: ",
-        await response.text(),
-      );
-    }
-  };
-
-  const postPubliserAvtalemal = async (uuid: string) => {
-    const response = await fetch(
-      `/api/sosialhjelp/avtaler-api/api/avtalemal/${uuid}/publiser`,
-      {
-        method: "POST",
-      },
-    );
-    if (response.status < 300) {
-      await router.replace(router.asPath);
-    } else {
-      console.error(
-        "Failed to create avtalemal, status: ",
-        response.status,
-        " - ",
-        response.statusText,
-        ", message: ",
-        await response.text(),
-      );
-    }
-  };
+  const { deleteAvtalemal, createAvtalemal, publishAvtalemal } = useMutations();
 
   return (
     <Page contentBlockPadding="end">
@@ -89,7 +49,9 @@ export default function Home({ avtalemaler }: Props) {
                       <HStack align="center" gap="4">
                         <Heading size="medium">
                           <HStack align="center">
-                            <Link href={`/api${avtalemal.dokumentUrl}`}>
+                            <Link
+                              href={`/api/avtalemal${avtalemal.dokumentUrl}`}
+                            >
                               {avtalemal.navn}
                             </Link>
                             <FileIcon />
@@ -97,7 +59,8 @@ export default function Home({ avtalemaler }: Props) {
                         </Heading>
                         {avtalemal.publisert && (
                           <Tag variant="success-moderate" size="small">
-                            Publisert {new Date(avtalemal.publisert).toDateString()}
+                            Publisert{" "}
+                            {new Date(avtalemal.publisert).toDateString()}
                           </Tag>
                         )}
                         {!avtalemal.publisert && (
@@ -107,14 +70,19 @@ export default function Home({ avtalemaler }: Props) {
                         )}
                       </HStack>
                     </VStack>
-                    <Button
-                      disabled={!!avtalemal.publisert}
-                      onClick={async () => {
-                        await postPubliserAvtalemal(avtalemal.uuid);
-                      }}
-                    >
-                      Publisér
-                    </Button>
+                    <HStack gap="4">
+                      <Button
+                        disabled={!!avtalemal.publisert}
+                        onClick={() => publishAvtalemal(avtalemal.uuid)}
+                      >
+                        Publisér
+                      </Button>
+                      <Button
+                        disabled={!!avtalemal.publisert}
+                        icon={<TrashIcon />}
+                        onClick={() => deleteAvtalemal(avtalemal.uuid)}
+                      />
+                    </HStack>
                   </HStack>
                 </Box>
               ))}
@@ -133,7 +101,7 @@ export default function Home({ avtalemaler }: Props) {
           </Page.Block>
         </div>
       </div>
-      <NyAvtalemalModal ref={ref} submit={postNyAvtalemal} />
+      <NyAvtalemalModal ref={ref} submit={createAvtalemal} />
     </Page>
   );
 }

@@ -16,23 +16,8 @@ interface Props {
   Decorator: DecoratorComponents;
 }
 
-function createDecoratorEnv(ctx: DocumentContext): "dev" | "prod" {
-  switch (process.env.NEXT_PUBLIC_DEKORATOR_MILJO ?? "dev") {
-    case "local":
-    case "test":
-    case "dev":
-      return "dev";
-    case "prod":
-      return "prod";
-    default:
-      throw new Error(
-        `Unknown runtime environment: ${process.env.DEKORATOR_MILJO}`,
-      );
-  }
-}
-
 const decoratorParams = (ctx: DocumentContext): DecoratorFetchProps => ({
-  env: createDecoratorEnv(ctx),
+  env: process.env.NEXT_PUBLIC_RUNTIME_ENVIRONMENT as "dev" | "prod",
   serviceDiscovery: true,
   params: {
     simple: false,

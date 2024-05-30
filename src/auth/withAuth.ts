@@ -4,7 +4,11 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import {getToken, requestTokenxOboToken, validateAzureToken} from "@navikt/oasis";
+import {
+  getToken,
+  requestTokenxOboToken,
+  validateAzureToken,
+} from "@navikt/oasis";
 
 type ApiHandler<Response> = (
   req: NextApiRequest,
@@ -16,8 +20,8 @@ export function withAuth<Response>(
   handler: ApiHandler<Response | { message: string }>,
 ): ApiHandler<Response | { message: string }> {
   return async function withBearerTokenHandler(req, res) {
-    if (process.env.NODE_ENV === 'development') {
-      return handler(req, res, "token")
+    if (process.env.NODE_ENV === "development") {
+      return handler(req, res, "token");
     }
     const token = getToken(req);
     if (!token) {
@@ -83,7 +87,11 @@ export const getOboToken = async (token: string) => {
   if (process.env.NODE_ENV === "development") {
     return "token";
   }
-  const oboToken = await requestTokenxOboToken(token, "audience");
+  const targetAudience = process.env.NEXT_AVTALER_API_TARGET_AUDIENCE;
+  if (!targetAudience) {
+    throw new Error("Fant ikke target audience i env");
+  }
+  const oboToken = await requestTokenxOboToken(token, targetAudience);
 
   if (!oboToken.ok) {
     console.error("Kunne ikke exchange obo token", oboToken.error);

@@ -1,33 +1,29 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: sosialhjelp-avtaler
+  name: sosialhjelp-avtaler-admin
   namespace: teamdigisos
   labels:
     team: teamdigisos
 spec:
-  image: {{image}}
-  port: 5000
+  image: { { image } }
+  port: 8080
   ingresses:
-    - "https://www.nav.no/sosialhjelp/avtaler"
+    - "https://www.ansatt.nav.no/sosialhjelp/avtaler-admin"
   liveness:
-    path: /sosialhjelp/avtaler/internal/isalive
+    path: /sosialhjelp/avtaler-admin/api/internal/isalive
   readiness:
-    path: /sosialhjelp/avtaler/internal/isready
-  prometheus:
-    enabled: true
-    path: /sosialhjelp/avtaler/internal/metrics
+    path: /sosialhjelp/avtaler-admin/api/internal/isready
   replicas:
-    min: 2
+    min: 1
     max: 2
   resources:
     limits:
-      cpu: 200m
       memory: 256Mi
     requests:
       cpu: 10m
-      memory: 64Mi
-  idporten:
+      memory: 32Mi
+  azure:
     enabled: true
     sidecar:
       enabled: true
@@ -36,19 +32,8 @@ spec:
       autoLogin: true
   tokenx:
     enabled: true
-  env:
-    - name: AVTALER_API_BASE_URL
-      value: "http://sosialhjelp-avtaler-api.teamdigisos.svc.cluster.local"
-    - name: AVTALER_API_TARGET_AUDIENCE
-      value: "prod-gcp:teamdigisos:sosialhjelp-avtaler-api"
-    - name: PORT
-      value: "5000"
-    - name: MILJO
-      value: "prod-gcp"
   accessPolicy:
     outbound:
-      external:
-        - host: www.nav.no
       rules:
         - application: sosialhjelp-avtaler-api
         - application: nav-dekoratoren
