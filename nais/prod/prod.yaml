@@ -27,8 +27,7 @@ spec:
     enabled: true
     sidecar:
       enabled: true
-      level: Level4
-      locale: nb
+      allowAllUsers: true
       autoLogin: true
   tokenx:
     enabled: true
