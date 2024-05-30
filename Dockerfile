@@ -3,7 +3,6 @@ FROM gcr.io/distroless/nodejs20-debian11 as runtime
 WORKDIR /app
 
 COPY package.json /app/
-COPY .env /app/
 COPY .env.production /app/
 COPY .next/standalone /app/
 COPY public /app/public/
