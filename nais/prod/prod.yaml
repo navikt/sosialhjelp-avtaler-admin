@@ -11,9 +11,9 @@ spec:
   ingresses:
     - "https://www.ansatt.nav.no/sosialhjelp/avtaler-admin"
   liveness:
-    path: /sosialhjelp/avtaler-admin/api/internal/isalive
+    path: /sosialhjelp/avtaler-admin/api/internal/isAlive
   readiness:
-    path: /sosialhjelp/avtaler-admin/api/internal/isready
+    path: /sosialhjelp/avtaler-admin/api/internal/isReady
   replicas:
     min: 1
     max: 2
@@ -24,11 +24,11 @@ spec:
       cpu: 10m
       memory: 32Mi
   azure:
-    enabled: true
+    application:
+      enabled: true
+      allowAllUsers: true
     sidecar:
       enabled: true
-      level: Level4
-      locale: nb
       autoLogin: true
   tokenx:
     enabled: true
