@@ -24,11 +24,11 @@ spec:
       cpu: 10m
       memory: 32Mi
   azure:
-    enabled: true
+    application:
+      enabled: true
+      allowAllUsers: true
     sidecar:
       enabled: true
-      level: Level4
-      locale: nb
       autoLogin: true
   tokenx:
     enabled: true
