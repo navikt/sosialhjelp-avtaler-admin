@@ -136,8 +136,5 @@ const fetchAvtalemaler = async (token: string): Promise<Avtalemal[]> => {
     throw new Error(await response.text());
   }
 
-  let json = (await response.json()) as Avtalemal[];
-
-  console.log(json);
-  return json;
+  return response.json();
 };

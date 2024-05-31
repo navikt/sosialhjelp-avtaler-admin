@@ -14,7 +14,6 @@ const handler = async (
   }
   const path = Array.isArray(slug) ? slug.join("/") : slug;
 
-  console.log(path);
   const oboToken = await getOboToken(token);
   await proxyApiRouteRequest({
     req,
