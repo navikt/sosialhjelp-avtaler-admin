@@ -12,7 +12,7 @@ const handler = async (
     res.status(400).json({ message: "Manglende path" });
     return;
   }
-  const path = Array.isArray(slug) ? slug.join("/") : slug;
+  const path = "/" + (Array.isArray(slug) ? slug.join("/") : slug);
 
   const oboToken = await getOboToken(token);
   await proxyApiRouteRequest({
