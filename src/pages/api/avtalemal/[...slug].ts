@@ -63,10 +63,10 @@ const handler = async (
     const stream = Readable.from(req);
     const bodyResponse = await stream2buffer(stream);
     const backendReq = http.request(requestOptions, (proxyRequestResponse) => {
-      console.log("tok imot response: ", proxyRequestResponse.statusCode, ", url: ", proxyRequestResponse.url);
       if (proxyRequestResponse.statusCode != null) {
         res.status(proxyRequestResponse.statusCode);
       }
+      console.log("response headers:", proxyRequestResponse.headers);
       for (const headersKey in proxyRequestResponse.headers) {
         const header = proxyRequestResponse.headers[headersKey];
         if (header) {
@@ -74,10 +74,17 @@ const handler = async (
         }
       }
 
+      proxyRequestResponse.on("readable", (data: any) => {
+        while (data.read !== null) {
+          console.log("readable:", data);
+        }
+      });
       proxyRequestResponse.on("data", (data: unknown) => {
+        console.log("data:", data);
         res.write(data);
       });
       proxyRequestResponse.on("end", () => {
+        console.log("end");
         res.end();
       });
     });
