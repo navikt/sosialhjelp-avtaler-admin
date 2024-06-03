@@ -16,6 +16,7 @@ const handler = async (
   const path = Array.isArray(slug) ? slug.join("/") : slug;
 
   const oboToken = await getOboToken(token);
+  console.log("path: ", oboToken);
   console.log(
     "proxying request to: http://",
     process.env.NEXT_AVTALER_API_HOSTNAME ?? "",
