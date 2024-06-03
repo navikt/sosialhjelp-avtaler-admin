@@ -41,7 +41,7 @@ const nextConfig = {
   output: "standalone",
   assetPrefix:
     process.env.NODE_ENV === "production"
-      ? "https://cdn.nav.no/teamdigisos/sosialhjelp-innsyn"
+      ? "https://cdn.nav.no/teamdigisos/sosialhjelp-avtaler-admin"
       : undefined,
 };
 
