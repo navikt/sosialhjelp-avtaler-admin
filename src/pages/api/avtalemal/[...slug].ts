@@ -8,6 +8,7 @@ const handler = async (
   token: string,
 ) => {
   const { slug } = req.query;
+  console.log("slug: ", slug);
   if (!slug) {
     res.status(400).json({ message: "Manglende path" });
     return;
