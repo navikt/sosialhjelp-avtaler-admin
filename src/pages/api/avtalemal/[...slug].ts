@@ -23,14 +23,18 @@ const handler = async (
     "/",
     path,
   );
-  await proxyApiRouteRequest({
-    req,
-    res,
-    bearerToken: oboToken,
-    hostname: process.env.NEXT_AVTALER_API_HOSTNAME ?? "",
-    path: path as string,
-    https: false,
-  });
+  try {
+    await proxyApiRouteRequest({
+      req,
+      res,
+      bearerToken: oboToken,
+      hostname: process.env.NEXT_AVTALER_API_HOSTNAME ?? "",
+      path: path as string,
+      https: false,
+    });
+  } catch (e) {
+    console.error("Noe feilet under proxying: " ,e);
+  }
 };
 
 export const config = {
