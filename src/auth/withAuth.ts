@@ -91,7 +91,7 @@ export const getOboToken = async (token: string) => {
   if (!targetAudience) {
     throw new Error("Fant ikke target audience i env");
   }
-  const oboToken = await requestAzureOboToken(token, targetAudience);
+  const oboToken = await requestTokenxOboToken(token, targetAudience);
 
   if (!oboToken.ok) {
     console.error("Kunne ikke exchange obo token", oboToken.error);
