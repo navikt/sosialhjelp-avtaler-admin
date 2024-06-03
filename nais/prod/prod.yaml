@@ -31,8 +31,6 @@ spec:
     sidecar:
       enabled: true
       autoLogin: true
-  tokenx:
-    enabled: true
   accessPolicy:
     outbound:
       rules:
