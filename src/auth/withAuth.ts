@@ -5,7 +5,7 @@ import {
   NextApiResponse,
 } from "next";
 import {
-  getToken,
+  getToken, requestOboToken,
   requestTokenxOboToken,
   validateAzureToken,
 } from "@navikt/oasis";
@@ -91,7 +91,7 @@ export const getOboToken = async (token: string) => {
   if (!targetAudience) {
     throw new Error("Fant ikke target audience i env");
   }
-  const oboToken = await requestTokenxOboToken(token, targetAudience);
+  const oboToken = await requestOboToken(token, targetAudience);
 
   if (!oboToken.ok) {
     console.error("Kunne ikke exchange obo token", oboToken.error);
