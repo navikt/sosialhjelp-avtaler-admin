@@ -10,19 +10,36 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import styles from "../styles/Home.module.css";
-import { FileIcon, TrashIcon } from "@navikt/aksel-icons";
-import { useRef } from "react";
+import { ArrowRightIcon, FileIcon, TrashIcon } from "@navikt/aksel-icons";
+import { useRef, useState } from "react";
 import NyAvtalemalModal from "@/components/modal/NyAvtalemalModal";
-import { Avtalemal } from "@/types/Avtalemal";
+import { Avtalemal, Replacement } from "@/types/Avtalemal";
 import Link from "next/link";
 import useMutations from "@/hooks/useMutations";
+import PreviewModal from "@/components/modal/PreviewModal";
 
 interface Props {
   avtalemaler: Avtalemal[];
 }
 
+const replacementToReadable = (replacement: Replacement) => {
+  switch (replacement) {
+    case Replacement.KOMMUNENAVN:
+      return "<Kommunenavn>";
+    case Replacement.KOMMUNEORGNR:
+      return "<Kommunens orgnr>";
+    case Replacement.DATO:
+      return "<Dato>";
+    default:
+      return replacement;
+  }
+};
+
 export default function Home({ avtalemaler }: Props) {
-  const ref = useRef<HTMLDialogElement>(null);
+  const nyAvtaleModalRef = useRef<HTMLDialogElement>(null);
+  const previewModalRef = useRef<HTMLDialogElement>(null);
+
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { deleteAvtalemal, createAvtalemal, publishAvtalemal } = useMutations();
 
@@ -45,7 +62,7 @@ export default function Home({ avtalemaler }: Props) {
                   padding={"3"}
                 >
                   <HStack justify="space-between" align="center">
-                    <VStack>
+                    <VStack gap="3">
                       <HStack align="center" gap="4">
                         <Heading size="medium">
                           <HStack align="center">
@@ -69,8 +86,28 @@ export default function Home({ avtalemaler }: Props) {
                           </Tag>
                         )}
                       </HStack>
+                      {Object.entries(avtalemal.replacementMap).map(
+                        ([key, value]) => {
+                          return (
+                            <HStack align="center" key={`${key}-${value}`}>
+                              {key} <ArrowRightIcon /> {replacementToReadable(value)}
+                            </HStack>
+                          );
+                        },
+                      )}
                     </VStack>
                     <HStack gap="4">
+                      <Button
+                        variant="secondary"
+                        onClick={() => {
+                          setPreviewUrl(
+                            `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.previewUrl}`,
+                          );
+                          previewModalRef.current?.showModal();
+                        }}
+                      >
+                        Forhåndsvis med eksempeldata
+                      </Button>
                       <Button
                         disabled={!!avtalemal.publisert}
                         onClick={() => publishAvtalemal(avtalemal.uuid)}
@@ -78,6 +115,7 @@ export default function Home({ avtalemaler }: Props) {
                         Publisér
                       </Button>
                       <Button
+                        variant="danger"
                         disabled={!!avtalemal.publisert}
                         icon={<TrashIcon />}
                         onClick={() => deleteAvtalemal(avtalemal.uuid)}
@@ -93,7 +131,7 @@ export default function Home({ avtalemaler }: Props) {
             <Button
               style={{ marginTop: "1rem" }}
               onClick={() => {
-                ref.current?.showModal();
+                nyAvtaleModalRef.current?.showModal();
               }}
             >
               Opprett ny avtalemal
@@ -101,7 +139,12 @@ export default function Home({ avtalemaler }: Props) {
           </Page.Block>
         </div>
       </div>
-      <NyAvtalemalModal ref={ref} submit={createAvtalemal} />
+      <NyAvtalemalModal ref={nyAvtaleModalRef} submit={createAvtalemal} />
+      <PreviewModal
+        ref={previewModalRef}
+        url={previewUrl!}
+        onClose={() => setPreviewUrl(null)}
+      />
     </Page>
   );
 }
@@ -109,7 +152,6 @@ export default function Home({ avtalemaler }: Props) {
 export const getServerSideProps = withAuthenticatedPage(
   async (context, token) => {
     const avtalemaler = await fetchAvtalemaler(token);
-
     return {
       props: {
         avtalemaler,
