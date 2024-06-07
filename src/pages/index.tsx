@@ -90,7 +90,8 @@ export default function Home({ avtalemaler }: Props) {
                         ([key, value]) => {
                           return (
                             <HStack align="center" key={`${key}-${value}`}>
-                              {key} <ArrowRightIcon /> {replacementToReadable(value)}
+                              {key} <ArrowRightIcon />{" "}
+                              {replacementToReadable(value)}
                             </HStack>
                           );
                         },
@@ -125,7 +126,7 @@ export default function Home({ avtalemaler }: Props) {
                 </Box>
               ))}
               {avtalemaler.length === 0 && (
-                <BodyShort>Ingen avtaler enda</BodyShort>
+                <BodyShort>Ingen avtalemaler enda</BodyShort>
               )}
             </VStack>
             <Button
@@ -143,7 +144,10 @@ export default function Home({ avtalemaler }: Props) {
       <PreviewModal
         ref={previewModalRef}
         url={previewUrl!}
-        onClose={() => setPreviewUrl(null)}
+        onClose={() => {
+          setPreviewUrl(null);
+          previewModalRef.current?.close();
+        }}
       />
     </Page>
   );

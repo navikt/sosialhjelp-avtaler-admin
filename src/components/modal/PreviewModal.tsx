@@ -1,6 +1,6 @@
-import React, { ForwardedRef, forwardRef, useRef, useState } from "react";
-import { BodyShort, Button, Heading, Modal } from "@navikt/ds-react";
-import FilePreviewButtons from "@/components/modal/filepreview/FilePreviewButtons";
+import React, { ForwardedRef, forwardRef, useRef } from "react";
+import { Button, Modal, VStack } from "@navikt/ds-react";
+import { ExpandIcon } from "@navikt/aksel-icons";
 
 interface Props {
   url: string;
@@ -11,23 +11,24 @@ const PreviewModal = (
   { url, onClose }: Props,
   ref: ForwardedRef<HTMLDialogElement>,
 ): React.JSX.Element => {
-  const [isFullscreen, setFullscreen] = useState<boolean>(false);
   const ref2 = useRef<HTMLObjectElement>(null);
 
   return (
     <Modal ref={ref} header={{ heading: "Forhåndsvisning" }} width="1000px">
       <Modal.Body>
-        <div>
-          <FilePreviewButtons
-            isFullscreen={isFullscreen}
-            setFullscreen={(it) => {
+        <VStack>
+          <Button
+            style={{ alignSelf: "end" }}
+            variant="tertiary"
+            icon={<ExpandIcon />}
+            onClick={(it) => {
               if (it) {
                 ref2.current?.requestFullscreen();
-              } else {
-                document?.exitFullscreen();
               }
             }}
-          />
+          >
+            Se i fullskjerm
+          </Button>
           <object
             ref={ref2}
             width="100%"
@@ -35,7 +36,7 @@ const PreviewModal = (
             data={url}
             type="application/pdf"
           />
-        </div>
+        </VStack>
       </Modal.Body>
       <Modal.Footer className={"!block space-y-4"}>
         <Button variant="secondary" onClick={onClose}>
