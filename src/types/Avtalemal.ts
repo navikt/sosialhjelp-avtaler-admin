@@ -5,6 +5,7 @@ export interface Avtalemal {
   uuid: string;
   previewUrl: string;
   replacementMap: Record<string, Replacement>;
+  publishedTo: Array<string>
 }
 
 export enum Replacement {

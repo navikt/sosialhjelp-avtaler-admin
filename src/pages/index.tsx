@@ -11,15 +11,19 @@ import {
 } from "@navikt/ds-react";
 import styles from "../styles/Home.module.css";
 import { ArrowRightIcon, FileIcon, TrashIcon } from "@navikt/aksel-icons";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import NyAvtalemalModal from "@/components/modal/NyAvtalemalModal";
 import { Avtalemal, Replacement } from "@/types/Avtalemal";
 import Link from "next/link";
 import useMutations from "@/hooks/useMutations";
 import PreviewModal from "@/components/modal/PreviewModal";
+import PublishModal from "@/components/modal/PublishModal";
+import { Kommune } from "@/types/Kommune";
+import publishModal from "@/components/modal/PublishModal";
 
 interface Props {
   avtalemaler: Avtalemal[];
+  kommuner: Kommune[];
 }
 
 const replacementToReadable = (replacement: Replacement) => {
@@ -35,11 +39,13 @@ const replacementToReadable = (replacement: Replacement) => {
   }
 };
 
-export default function Home({ avtalemaler }: Props) {
+export default function Home({ avtalemaler, kommuner }: Props) {
   const nyAvtaleModalRef = useRef<HTMLDialogElement>(null);
   const previewModalRef = useRef<HTMLDialogElement>(null);
+  const publishModalRef = useRef<HTMLDialogElement>(null);
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [publishUuid, setPublishUuid] = useState<string | null>(null);
 
   const { deleteAvtalemal, createAvtalemal, publishAvtalemal } = useMutations();
 
@@ -75,10 +81,19 @@ export default function Home({ avtalemaler }: Props) {
                           </HStack>
                         </Heading>
                         {avtalemal.publisert && (
-                          <Tag variant="success-moderate" size="small">
-                            Publisert{" "}
-                            {new Date(avtalemal.publisert).toDateString()}
-                          </Tag>
+                          <>
+                            {avtalemal.publishedTo.length > 0 && (
+                              <Tag variant="warning-moderate" size="small">
+                                Delvis publisert
+                              </Tag>
+                            )}
+                            {avtalemal.publishedTo.length === 0 && (
+                              <Tag variant="success-moderate" size="small">
+                                Publisert{" "}
+                                {new Date(avtalemal.publisert).toDateString()}
+                              </Tag>
+                            )}
+                          </>
                         )}
                         {!avtalemal.publisert && (
                           <Tag variant="warning-moderate" size="small">
@@ -110,8 +125,14 @@ export default function Home({ avtalemaler }: Props) {
                         Forhåndsvis med eksempeldata
                       </Button>
                       <Button
-                        disabled={!!avtalemal.publisert}
-                        onClick={() => publishAvtalemal(avtalemal.uuid)}
+                        disabled={
+                          !!avtalemal.publisert &&
+                          avtalemal.publishedTo.length === kommuner.length
+                        }
+                        onClick={() => {
+                          setPublishUuid(avtalemal.uuid);
+                          return publishModalRef.current?.showModal();
+                        }}
                       >
                         Publisér
                       </Button>
@@ -149,20 +170,54 @@ export default function Home({ avtalemaler }: Props) {
           previewModalRef.current?.close();
         }}
       />
+      <PublishModal
+        ref={publishModalRef}
+        onClose={() => {
+          setPublishUuid(null);
+          publishModalRef.current?.close();
+        }}
+        onSubmit={(uuid, data) =>
+          publishAvtalemal(uuid, data ? JSON.stringify(data) : undefined)
+        }
+        uuid={publishUuid}
+        kommuner={kommuner}
+        alreadyPublished={
+          avtalemaler.find((avtalemal) => avtalemal.uuid === publishUuid)
+            ?.publishedTo
+        }
+      />
     </Page>
   );
 }
 
 export const getServerSideProps = withAuthenticatedPage(
   async (context, token) => {
-    const avtalemaler = await fetchAvtalemaler(token);
+    const avtalemalerPromise = fetchAvtalemaler(token);
+    const kommunerPromise = fetchKommuner(token);
+    const [avtalemaler, kommuner] = await Promise.all([
+      avtalemalerPromise,
+      kommunerPromise,
+    ]);
+    const deduped = dedupeKommuner(kommuner);
     return {
       props: {
         avtalemaler,
+        kommuner: deduped,
       },
     };
   },
 );
+
+// Noen kommuner har likt navn, så postfixer med orgnr for å unngå rendering errors
+const dedupeKommuner = (array: Array<Kommune>): Array<Kommune> => {
+  return array.map((it) => ({
+    ...it,
+    navn:
+      it.navn === "HERØY KOMMUNE" || it.navn === "VÅLER KOMMUNE"
+        ? `${it.navn} (${it.orgnr})`
+        : it.navn,
+  }));
+};
 
 const fetchAvtalemaler = async (token: string): Promise<Avtalemal[]> => {
   const url = `http://${process.env.NEXT_AVTALER_API_HOSTNAME}/sosialhjelp/avtaler-api/api/avtalemal`;
@@ -175,6 +230,27 @@ const fetchAvtalemaler = async (token: string): Promise<Avtalemal[]> => {
   if (response.status > 299) {
     console.error(
       "Failed to fetch avtalemaler, status: ",
+      response.status,
+      " - ",
+      response.statusText,
+    );
+    throw new Error(await response.text());
+  }
+
+  return response.json();
+};
+
+const fetchKommuner = async (token: string): Promise<Kommune[]> => {
+  const url = `http://${process.env.NEXT_AVTALER_API_HOSTNAME}/sosialhjelp/avtaler-api/api/kommuner`;
+  const oboToken = await getOboToken(token);
+
+  const response = await fetch(url, {
+    headers: { Authorization: `Bearer ${oboToken}` },
+  });
+
+  if (response.status > 299) {
+    console.error(
+      "Failed to fetch kommuner, status: ",
       response.status,
       " - ",
       response.statusText,

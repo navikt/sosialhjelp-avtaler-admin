@@ -16,9 +16,11 @@ const useMutations = () => {
         ),
     });
 
-  const publishAvtalemal = async (uuid: string) => {
-    return post({
+  const publishAvtalemal = async (uuid: string, body?: string) =>
+    post({
       url: `/sosialhjelp/avtaler-admin/api/avtalemal/sosialhjelp/avtaler-api/api/avtalemal/${uuid}/publiser`,
+      body,
+      headers: { "Content-Type": "application/json" },
       onError: (response) => {
         console.error(
           "Failed to publish avtalemal, status: ",
@@ -28,7 +30,6 @@ const useMutations = () => {
         );
       },
     });
-  };
 
   const deleteAvtalemal = async (uuid: string) => {
     return doDelete({
@@ -51,6 +52,7 @@ interface Params {
   onError: (response: Response) => void;
   onSuccess?: (response: Response) => void;
   body?: BodyInit | null | undefined;
+  headers?: HeadersInit;
 }
 
 const usePost = () => {
@@ -62,9 +64,11 @@ const usePost = () => {
       await router.replace(router.asPath);
     },
     body,
+    headers,
   }: Params) => {
     const response = await fetch(url, {
       method: "POST",
+      headers,
       body,
     });
     if (response.status < 300) {
