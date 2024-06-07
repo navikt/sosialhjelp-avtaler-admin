@@ -11,7 +11,7 @@ const PreviewModal = (
   { url, onClose }: Props,
   ref: ForwardedRef<HTMLDialogElement>,
 ): React.JSX.Element => {
-  const ref2 = useRef<HTMLObjectElement>(null);
+  const pdfRef = useRef<HTMLObjectElement>(null);
 
   return (
     <Modal ref={ref} header={{ heading: "Forhåndsvisning" }} width="1000px">
@@ -23,14 +23,14 @@ const PreviewModal = (
             icon={<ExpandIcon />}
             onClick={(it) => {
               if (it) {
-                ref2.current?.requestFullscreen();
+                pdfRef.current?.requestFullscreen();
               }
             }}
           >
             Se i fullskjerm
           </Button>
           <object
-            ref={ref2}
+            ref={pdfRef}
             width="100%"
             height="1280px"
             data={url}
