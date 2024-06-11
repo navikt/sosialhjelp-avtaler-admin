@@ -28,14 +28,17 @@ const PublishModal = (
   );
   const [publishAll, setPublishAll] = useState<("Ja" | never)[]>([]);
   const [selectedKommuner, setSelectedKommuner] = useState<string[]>([]);
-  const handleSubmit = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleSubmit = async () => {
     if (!uuid) {
       throw new Error("uuid is null");
     }
+    setIsLoading(true);
     if (publishAll[0] === "Ja") {
-      return onSubmit(uuid);
+      await onSubmit(uuid);
     }
-    return onSubmit(uuid, selectedKommuner);
+    await onSubmit(uuid, selectedKommuner);
+    setIsLoading(false);
   };
   const close = () => {
     setPublishAll([]);
@@ -49,7 +52,6 @@ const PublishModal = (
       style={{ minHeight: "800px" }}
       width="800px"
       onClose={close}
-
     >
       <Modal.Body style={{ flex: "1 1 auto" }}>
         <VStack justify="space-between" gap="2">
@@ -106,7 +108,9 @@ const PublishModal = (
         </VStack>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleSubmit}>Publisér</Button>
+        <Button onClick={handleSubmit} loading={isLoading}>
+          Publisér
+        </Button>
         <Button variant="secondary" onClick={close}>
           Lukk
         </Button>
