@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
 
+
+
 const useMutations = () => {
   const post = usePost();
   const doDelete = useDelete();
@@ -17,10 +19,11 @@ const useMutations = () => {
     });
 
   const publishAvtalemal = async (uuid: string, body?: string) =>
+    
     post({
       url: `/sosialhjelp/avtaler-admin/api/avtalemal/sosialhjelp/avtaler-api/api/avtalemal/${uuid}/publiser`,
       body,
-      headers: { "Content-Type": "application/json" },
+      headers: body ? { "Content-Type": "application/json" } : undefined,
       onError: (response) => {
         console.error(
           "Failed to publish avtalemal, status: ",

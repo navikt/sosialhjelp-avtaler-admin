@@ -9,6 +9,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { Kommune } from "@/types/Kommune";
+import usePublishingPolling from "@/hooks/usePublishingPolling";
 
 interface Props {
   onSubmit: (uuid: string, data?: string[]) => Promise<void>;
@@ -29,20 +30,32 @@ const PublishModal = (
   const [publishAll, setPublishAll] = useState<("Ja" | never)[]>([]);
   const [selectedKommuner, setSelectedKommuner] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [shouldPoll, setShouldPoll] = useState(true);
+  const { data, isLoading: isPolling } = usePublishingPolling(shouldPoll, uuid);
+
+  if (
+    !isLoading &&
+    data?.every((it) => Boolean(it.avtaleUuid) || it.retryCount >= 5)
+  ) {
+    setShouldPoll(false);
+  }
   const handleSubmit = async () => {
     if (!uuid) {
       throw new Error("uuid is null");
     }
     setIsLoading(true);
     if (publishAll[0] === "Ja") {
-      await onSubmit(uuid);
+      await onSubmit(uuid, []);
+    } else {
+      await onSubmit(uuid, selectedKommuner);
     }
-    await onSubmit(uuid, selectedKommuner);
+    setShouldPoll(true);
     setIsLoading(false);
   };
   const close = () => {
     setPublishAll([]);
     setSelectedKommuner([]);
+    setShouldPoll(false);
     onClose();
   };
   return (
@@ -55,6 +68,12 @@ const PublishModal = (
     >
       <Modal.Body style={{ flex: "1 1 auto" }}>
         <VStack justify="space-between" gap="2">
+          {shouldPoll && (
+            <div>
+              <BodyShort>Publiserer avtaler...</BodyShort>
+              <BodyShort>Dette kan ta litt tid</BodyShort>
+            </div>
+          )}
           {!!alreadyPublished?.length && (
             <div>
               <BodyShort>

@@ -82,12 +82,12 @@ export default function Home({ avtalemaler, kommuner }: Props) {
                         </Heading>
                         {avtalemal.publisert && (
                           <>
-                            {avtalemal.publishedTo.length > 0 && (
+                            {avtalemal.publishedTo.length > 0 && avtalemal.publishedTo.length !== kommuner.length && (
                               <Tag variant="warning-moderate" size="small">
                                 Delvis publisert
                               </Tag>
                             )}
-                            {avtalemal.publishedTo.length === 0 && (
+                            {avtalemal.publishedTo.length === 0 || avtalemal.publishedTo.length === kommuner.length && (
                               <Tag variant="success-moderate" size="small">
                                 Publisert{" "}
                                 {new Date(avtalemal.publisert).toDateString()}
