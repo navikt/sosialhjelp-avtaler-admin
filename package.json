@@ -16,7 +16,6 @@
     "@navikt/nav-dekoratoren-moduler": "^2.1.6",
     "@navikt/next-api-proxy": "^3.4.1",
     "@navikt/oasis": "^3.3.0",
-    "@react-pdf/renderer": "^3.4.4",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
