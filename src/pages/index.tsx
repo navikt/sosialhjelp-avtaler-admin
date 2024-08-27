@@ -20,6 +20,8 @@ import PreviewModal from "@/components/modal/PreviewModal";
 import PublishModal from "@/components/modal/PublishModal";
 import { Kommune } from "@/types/Kommune";
 import publishModal from "@/components/modal/PublishModal";
+import Tags from "@/components/elements/Tags";
+import ButtonRow from "@/components/elements/ButtonRow";
 
 interface Props {
   avtalemaler: Avtalemal[];
@@ -37,6 +39,29 @@ const replacementToReadable = (replacement: Replacement) => {
     default:
       return replacement;
   }
+};
+
+const publishedStatus = (
+  publisert: string,
+  avtalemal: Avtalemal,
+  kommuneLength: number,
+): "partial" | "full" | "none" => {
+  if (!publisert) {
+    return "none";
+  }
+  if (
+    avtalemal.publishedTo.length > 0 &&
+    avtalemal.publishedTo.length !== kommuneLength
+  ) {
+    return "partial";
+  }
+  if (
+    avtalemal.publishedTo.length === 0 ||
+    avtalemal.publishedTo.length === kommuneLength
+  ) {
+    return "full";
+  }
+  return "none";
 };
 
 export default function Home({ avtalemaler, kommuner }: Props) {
@@ -80,26 +105,14 @@ export default function Home({ avtalemaler, kommuner }: Props) {
                             <FileIcon />
                           </HStack>
                         </Heading>
-                        {avtalemal.publisert && (
-                          <>
-                            {avtalemal.publishedTo.length > 0 && avtalemal.publishedTo.length !== kommuner.length && (
-                              <Tag variant="warning-moderate" size="small">
-                                Delvis publisert
-                              </Tag>
-                            )}
-                            {avtalemal.publishedTo.length === 0 || avtalemal.publishedTo.length === kommuner.length && (
-                              <Tag variant="success-moderate" size="small">
-                                Publisert{" "}
-                                {new Date(avtalemal.publisert).toDateString()}
-                              </Tag>
-                            )}
-                          </>
-                        )}
-                        {!avtalemal.publisert && (
-                          <Tag variant="warning-moderate" size="small">
-                            Ikke publisert
-                          </Tag>
-                        )}
+                        <Tags
+                          publishedDate={avtalemal.publisert}
+                          publishedStatus={publishedStatus(
+                            avtalemal.publisert,
+                            avtalemal,
+                            kommuner.length,
+                          )}
+                        />
                       </HStack>
                       {Object.entries(avtalemal.replacementMap).map(
                         ([key, value]) => {
@@ -112,37 +125,24 @@ export default function Home({ avtalemaler, kommuner }: Props) {
                         },
                       )}
                     </VStack>
-                    <HStack gap="4">
-                      <Button
-                        variant="secondary"
-                        onClick={() => {
-                          setPreviewUrl(
-                            `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.previewUrl}`,
-                          );
-                          previewModalRef.current?.showModal();
-                        }}
-                      >
-                        Forhåndsvis med eksempeldata
-                      </Button>
-                      <Button
-                        disabled={
-                          !!avtalemal.publisert &&
-                          avtalemal.publishedTo.length === kommuner.length
-                        }
-                        onClick={() => {
-                          setPublishUuid(avtalemal.uuid);
-                          return publishModalRef.current?.showModal();
-                        }}
-                      >
-                        Publisér
-                      </Button>
-                      <Button
-                        variant="danger"
-                        disabled={!!avtalemal.publisert}
-                        icon={<TrashIcon />}
-                        onClick={() => deleteAvtalemal(avtalemal.uuid)}
-                      />
-                    </HStack>
+                    <ButtonRow
+                      onClickPreview={() => {
+                        setPreviewUrl(
+                          `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.previewUrl}`,
+                        );
+                        previewModalRef.current?.showModal();
+                      }}
+                      onClickPublish={() => {
+                        setPublishUuid(avtalemal.uuid);
+                        return publishModalRef.current?.showModal();
+                      }}
+                      onClickDelete={() => deleteAvtalemal(avtalemal.uuid)}
+                      publishDisabled={
+                        !!avtalemal.publisert &&
+                        avtalemal.publishedTo.length === kommuner.length
+                      }
+                      deleteDisabled={!!avtalemal.publisert}
+                    />
                   </HStack>
                 </Box>
               ))}
@@ -191,7 +191,7 @@ export default function Home({ avtalemaler, kommuner }: Props) {
 }
 
 export const getServerSideProps = withAuthenticatedPage(
-  async (context, token) => {
+  async (_, token) => {
     const avtalemalerPromise = fetchAvtalemaler(token);
     const kommunerPromise = fetchKommuner(token);
     const [avtalemaler, kommuner] = await Promise.all([

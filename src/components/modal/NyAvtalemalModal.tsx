@@ -5,6 +5,7 @@ import {
   HStack,
   List,
   Modal,
+  Textarea,
   TextField,
   UNSAFE_Combobox,
   UNSAFE_FileUpload,
@@ -17,10 +18,19 @@ interface Props {
   submit: (formData: FormData) => void;
 }
 
+interface MetadataFormData {
+  name: string;
+  replacementMap: Record<string, string>;
+  ingress: string;
+  kvitteringstekst: string;
+}
+
 interface FormValues {
   name: string;
   files: FileObject[];
   map: [string, string][];
+  ingress: string;
+  kvitteringstekst: string;
 }
 
 const options = [
@@ -28,13 +38,14 @@ const options = [
   { label: "Kommunens orgnr", value: "KOMMUNEORGNR" },
   { label: "Dato", value: "DATO" },
 ];
+
 const NyAvtalemalModal = (
   { submit }: Props,
   ref: ForwardedRef<HTMLDialogElement>,
 ): React.JSX.Element => {
   const { register, handleSubmit, control, reset, watch, formState } =
     useForm<FormValues>({
-      defaultValues: { files: [], map: [["", ""]], name: "" },
+      defaultValues: { files: [], map: [["", ""]], name: "", ingress: "", kvitteringstekst: "" },
     });
   const { fields, append, remove } = useFieldArray({ control, name: "map" });
 
@@ -54,7 +65,9 @@ const NyAvtalemalModal = (
       JSON.stringify({
         name: data.name,
         replacementMap: Object.fromEntries(data.map),
-      }),
+        ingress: data.ingress,
+        kvitteringstekst: data.kvitteringstekst
+      } satisfies MetadataFormData),
     );
     submit(formData);
     close();
@@ -70,6 +83,8 @@ const NyAvtalemalModal = (
               error={formState.errors.name?.message}
               {...register("name", { required: "Påkrevd" })}
             />
+            <Textarea label={"Avtalebeskrivelse"} {...register("ingress")} />
+            <Textarea label={"Kvitteringstekst"} {...register("kvitteringstekst")} />
             <VStack gap="2">
               <Controller
                 rules={{
