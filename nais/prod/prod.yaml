@@ -38,5 +38,3 @@ spec:
     outbound:
       rules:
         - application: sosialhjelp-avtaler-api
-        - application: nav-dekoratoren
-          namespace: personbruker
