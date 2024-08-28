@@ -13,6 +13,7 @@ import {
 } from "@navikt/ds-react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { TrashIcon } from "@navikt/aksel-icons";
+import styles from "./NyAvtaleModal.module.css";
 
 interface Props {
   submit: (formData: FormData) => void;
@@ -22,7 +23,9 @@ interface MetadataFormData {
   name: string;
   replacementMap: Record<string, string>;
   ingress: string;
+  ingressNynorsk: string;
   kvitteringstekst: string;
+  kvitteringstekstNynorsk: string;
 }
 
 interface FormValues {
@@ -30,7 +33,9 @@ interface FormValues {
   files: FileObject[];
   map: [string, string][];
   ingress: string;
+  ingressNynorsk: string;
   kvitteringstekst: string;
+  kvitteringstekstNynorsk: string;
 }
 
 const options = [
@@ -45,7 +50,15 @@ const NyAvtalemalModal = (
 ): React.JSX.Element => {
   const { register, handleSubmit, control, reset, watch, formState } =
     useForm<FormValues>({
-      defaultValues: { files: [], map: [["", ""]], name: "", ingress: "", kvitteringstekst: "" },
+      defaultValues: {
+        files: [],
+        map: [["", ""]],
+        name: "",
+        ingress: "",
+        ingressNynorsk: "",
+        kvitteringstekst: "",
+        kvitteringstekstNynorsk: "",
+      },
     });
   const { fields, append, remove } = useFieldArray({ control, name: "map" });
 
@@ -66,7 +79,9 @@ const NyAvtalemalModal = (
         name: data.name,
         replacementMap: Object.fromEntries(data.map),
         ingress: data.ingress,
-        kvitteringstekst: data.kvitteringstekst
+        ingressNynorsk: data.ingressNynorsk,
+        kvitteringstekst: data.kvitteringstekst,
+        kvitteringstekstNynorsk: data.kvitteringstekstNynorsk,
       } satisfies MetadataFormData),
     );
     submit(formData);
@@ -83,8 +98,30 @@ const NyAvtalemalModal = (
               error={formState.errors.name?.message}
               {...register("name", { required: "Påkrevd" })}
             />
-            <Textarea label={"Avtalebeskrivelse"} {...register("ingress")} />
-            <Textarea label={"Kvitteringstekst"} {...register("kvitteringstekst")} />
+            <HStack gap="2">
+              <Textarea
+                label={"Avtalebeskrivelse bokmål"}
+                {...register("ingress")}
+                className={styles.textarea}
+              />
+              <Textarea
+                label={"Avtalebeskrivelse nynorsk"}
+                {...register("ingressNynorsk")}
+                className={styles.textarea}
+              />
+            </HStack>
+            <HStack gap="2">
+              <Textarea
+                label={"Kvitteringstekst bokmål"}
+                {...register("kvitteringstekst")}
+                className={styles.textarea}
+              />
+              <Textarea
+                label={"Kvitteringstekst nynorsk"}
+                {...register("kvitteringstekstNynorsk")}
+                className={styles.textarea}
+              />
+            </HStack>
             <VStack gap="2">
               <Controller
                 rules={{
