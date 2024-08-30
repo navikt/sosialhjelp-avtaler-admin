@@ -30,7 +30,7 @@ spec:
       allowAllUsers: false
       claims:
         groups:
-          - id: "ec26a5a7-0909-40e4-b68f-8eb9c755aa77"
+          - id: "9137b6c8-2023-4de9-87e0-0105f01c1e5d"
     sidecar:
       enabled: true
       autoLogin: true
