@@ -99,7 +99,7 @@ const NyAvtalemalModal = (
             <TextField
               label="Navn"
               error={formState.errors.name?.message}
-              {...register("name", { required: "Påkrevd" })}
+              {...register("name", { required: "Påkrevd", maxLength: {value: 80, message: "Maks 80 tegn"} })}
             />
             <HStack gap="2">
               <Textarea
