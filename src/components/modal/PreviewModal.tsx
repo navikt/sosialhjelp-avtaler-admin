@@ -1,6 +1,7 @@
-import React, { ForwardedRef, forwardRef, useRef } from "react";
+import React, { ForwardedRef, forwardRef, useEffect, useRef } from "react";
 import { Button, Modal, VStack } from "@navikt/ds-react";
 import { ExpandIcon } from "@navikt/aksel-icons";
+import PDFObject from "pdfobject";
 
 interface Props {
   url: string;
@@ -11,7 +12,12 @@ const PreviewModal = (
   { url, onClose }: Props,
   ref: ForwardedRef<HTMLDialogElement>,
 ): React.JSX.Element => {
-  const pdfRef = useRef<HTMLObjectElement>(null);
+  const embed = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    PDFObject.embed(url, embed.current, { supportRedirect: true });
+  }, [url]);
+
+  console.log(url);
 
   return (
     <Modal ref={ref} header={{ heading: "Forhåndsvisning" }} width="1000px">
@@ -23,18 +29,13 @@ const PreviewModal = (
             icon={<ExpandIcon />}
             onClick={(it) => {
               if (it) {
-                pdfRef.current?.requestFullscreen();
+                embed.current?.requestFullscreen();
               }
             }}
           >
             Se i fullskjerm
           </Button>
-          <object
-            ref={pdfRef}
-            width="100%"
-            height="1280px"
-            data={url}
-          />
+          <div style={{ width: "100%", height: "1280px" }} ref={embed} />
         </VStack>
       </Modal.Body>
       <Modal.Footer className={"!block space-y-4"}>

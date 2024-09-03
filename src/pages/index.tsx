@@ -6,22 +6,20 @@ import {
   Heading,
   HStack,
   Page,
-  Tag,
   VStack,
 } from "@navikt/ds-react";
 import styles from "../styles/Home.module.css";
-import { ArrowRightIcon, FileIcon, TrashIcon } from "@navikt/aksel-icons";
+import { ArrowRightIcon, FileIcon } from "@navikt/aksel-icons";
 import React, { useRef, useState } from "react";
 import NyAvtalemalModal from "@/components/modal/NyAvtalemalModal";
 import { Avtalemal, Replacement } from "@/types/Avtalemal";
 import Link from "next/link";
 import useMutations from "@/hooks/useMutations";
-import PreviewModal from "@/components/modal/PreviewModal";
 import PublishModal from "@/components/modal/PublishModal";
 import { Kommune } from "@/types/Kommune";
-import publishModal from "@/components/modal/PublishModal";
 import Tags from "@/components/elements/Tags";
 import ButtonRow from "@/components/elements/ButtonRow";
+import PreviewModal from "@/components/modal/PreviewModal";
 
 interface Props {
   avtalemaler: Avtalemal[];
@@ -190,23 +188,21 @@ export default function Home({ avtalemaler, kommuner }: Props) {
   );
 }
 
-export const getServerSideProps = withAuthenticatedPage(
-  async (_, token) => {
-    const avtalemalerPromise = fetchAvtalemaler(token);
-    const kommunerPromise = fetchKommuner(token);
-    const [avtalemaler, kommuner] = await Promise.all([
-      avtalemalerPromise,
-      kommunerPromise,
-    ]);
-    const deduped = dedupeKommuner(kommuner);
-    return {
-      props: {
-        avtalemaler,
-        kommuner: deduped,
-      },
-    };
-  },
-);
+export const getServerSideProps = withAuthenticatedPage(async (_, token) => {
+  const avtalemalerPromise = fetchAvtalemaler(token);
+  const kommunerPromise = fetchKommuner(token);
+  const [avtalemaler, kommuner] = await Promise.all([
+    avtalemalerPromise,
+    kommunerPromise,
+  ]);
+  const deduped = dedupeKommuner(kommuner);
+  return {
+    props: {
+      avtalemaler,
+      kommuner: deduped,
+    },
+  };
+});
 
 // Noen kommuner har likt navn, så postfixer med orgnr for å unngå rendering errors
 const dedupeKommuner = (array: Array<Kommune>): Array<Kommune> => {
