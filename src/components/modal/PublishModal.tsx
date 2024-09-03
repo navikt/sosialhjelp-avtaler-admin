@@ -40,6 +40,9 @@ const PublishModal = (
     setShouldPoll(false);
   }
   const handleSubmit = async () => {
+    if (publishAll[0] !== "Ja" && selectedKommuner.length === 0) {
+      return;
+    }
     if (!uuid) {
       throw new Error("uuid is null");
     }
