@@ -34,7 +34,6 @@ const PreviewModal = (
             width="100%"
             height="1280px"
             data={url}
-            type="application/pdf"
           />
         </VStack>
       </Modal.Body>
