@@ -6,7 +6,11 @@ export interface Avtalemal {
   previewUrl: string;
   exampleUrl: string;
   replacementMap: Record<string, Replacement>;
-  publishedTo: Array<string>
+  publishedTo: Array<string>,
+  ingress: string;
+  ingressNynorsk: string;
+  kvitteringstekst: string;
+  kvitteringstekstNynorsk: string;
 }
 
 export enum Replacement {

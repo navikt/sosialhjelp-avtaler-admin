@@ -17,8 +17,6 @@ const PreviewModal = (
     PDFObject.embed(url, embed.current, { supportRedirect: true });
   }, [url]);
 
-  console.log(url);
-
   return (
     <Modal ref={ref} header={{ heading: "Forhåndsvisning" }} width="1000px">
       <Modal.Body>

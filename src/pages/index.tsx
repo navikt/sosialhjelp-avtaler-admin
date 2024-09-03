@@ -1,10 +1,13 @@
 import { getOboToken, withAuthenticatedPage } from "@/auth/withAuth";
 import {
+  Accordion,
   BodyShort,
   Box,
   Button,
   Heading,
+  HGrid,
   HStack,
+  Label,
   Page,
   VStack,
 } from "@navikt/ds-react";
@@ -20,6 +23,7 @@ import { Kommune } from "@/types/Kommune";
 import Tags from "@/components/elements/Tags";
 import ButtonRow from "@/components/elements/ButtonRow";
 import PreviewModal from "@/components/modal/PreviewModal";
+import TextBox from "@/components/elements/TextBox";
 
 interface Props {
   avtalemaler: Avtalemal[];
@@ -29,7 +33,7 @@ interface Props {
 const replacementToReadable = (replacement: Replacement) => {
   switch (replacement) {
     case Replacement.KOMMUNENAVN:
-      return "<Kommunenavn>";
+      return "<Navnet på kommunen>";
     case Replacement.KOMMUNEORGNR:
       return "<Kommunens orgnr>";
     case Replacement.DATO:
@@ -83,26 +87,17 @@ export default function Home({ avtalemaler, kommuner }: Props) {
 
         <div style={{ marginTop: "1rem" }}>
           <Page.Block>
-            <VStack gap="4">
-              {avtalemaler.map((avtalemal) => (
-                <Box
-                  key={avtalemal.uuid}
-                  background="surface-info-subtle"
-                  padding={"3"}
-                >
-                  <HStack justify="space-between" align="center">
-                    <VStack gap="3">
-                      <HStack align="center" gap="4">
-                        <Heading size="medium">
-                          <HStack align="center">
-                            <Link
-                              href={`/api/avtalemal${avtalemal.dokumentUrl}`}
-                            >
-                              {avtalemal.navn}
-                            </Link>
-                            <FileIcon />
-                          </HStack>
-                        </Heading>
+            <Accordion headingSize="medium">
+              {avtalemaler.map((avtalemal) => {
+                let replacements = Object.entries(avtalemal.replacementMap);
+                return (
+                  <Accordion.Item key={avtalemal.uuid}>
+                    <Accordion.Header>
+                      <HStack align="center">
+                        <Link href={`/api/avtalemal${avtalemal.dokumentUrl}`}>
+                          {avtalemal.navn}
+                        </Link>
+                        <FileIcon />
                         <Tags
                           publishedDate={avtalemal.publisert}
                           publishedStatus={publishedStatus(
@@ -112,48 +107,88 @@ export default function Home({ avtalemaler, kommuner }: Props) {
                           )}
                         />
                       </HStack>
-                      {Object.entries(avtalemal.replacementMap).map(
-                        ([key, value]) => {
-                          return (
-                            <HStack align="center" key={`${key}-${value}`}>
-                              {key} <ArrowRightIcon />{" "}
-                              {replacementToReadable(value)}
-                            </HStack>
-                          );
-                        },
-                      )}
-                    </VStack>
-                    <ButtonRow
-                      onClickExample={() => {
-                        setPreviewUrl(
-                          `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.exampleUrl}`,
-                        );
-                        previewModalRef.current?.showModal();
-                      }}
-                      onClickPreview={() => {
-                        setPreviewUrl(
-                          `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.previewUrl}`,
-                        );
-                        previewModalRef.current?.showModal();
-                      }}
-                      onClickPublish={() => {
-                        setPublishUuid(avtalemal.uuid);
-                        return publishModalRef.current?.showModal();
-                      }}
-                      onClickDelete={() => deleteAvtalemal(avtalemal.uuid)}
-                      publishDisabled={
-                        !!avtalemal.publisert &&
-                        avtalemal.publishedTo.length === kommuner.length
-                      }
-                      deleteDisabled={!!avtalemal.publisert}
-                    />
-                  </HStack>
-                </Box>
-              ))}
+                    </Accordion.Header>
+                    <Accordion.Content>
+                      <VStack gap="4">
+                        <HGrid gap="4" columns={2}>
+                          <TextBox
+                            id={"ingress_bokmal"}
+                            label={"Ingress bokmål"}
+                            text={avtalemal.ingress}
+                          />
+                          <TextBox
+                            id={"ingress_nynorsk"}
+                            label={"Ingress nynorsk"}
+                            text={avtalemal.ingressNynorsk}
+                          />
+                          <TextBox
+                            id={"kvitteringstekst_bokmal"}
+                            label={"Kvitteringstekst bokmål"}
+                            text={avtalemal.kvitteringstekst}
+                          />
+                          <TextBox
+                            id={"kvitteringstekst_nynorsk"}
+                            label={"Kvitteringstekst nynorsk"}
+                            text={avtalemal.kvitteringstekstNynorsk}
+                          />
+                        </HGrid>
+                        {replacements.length > 0 ? (
+                          <Box>
+                            <Label>Erstattes i endelig pdf:</Label>
+                            <VStack gap="2">
+                              {replacements.map(([key, value]) => {
+                                return (
+                                  <HStack
+                                    align="center"
+                                    gap={"2"}
+                                    key={`${key}-${value}`}
+                                  >
+                                    <Box background={"surface-warning-subtle"}>
+                                      {key}
+                                    </Box>
+                                    <Box>blir erstattet med</Box>
+                                    <Box background="surface-warning-subtle">
+                                      {replacementToReadable(value)}
+                                    </Box>
+                                  </HStack>
+                                );
+                              })}
+                            </VStack>
+                          </Box>
+                        ) : null}
+                        <ButtonRow
+                          onClickExample={() => {
+                            setPreviewUrl(
+                              `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.exampleUrl}`,
+                            );
+                            previewModalRef.current?.showModal();
+                          }}
+                          onClickPreview={() => {
+                            setPreviewUrl(
+                              `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.previewUrl}`,
+                            );
+                            previewModalRef.current?.showModal();
+                          }}
+                          onClickPublish={() => {
+                            setPublishUuid(avtalemal.uuid);
+                            return publishModalRef.current?.showModal();
+                          }}
+                          onClickDelete={() => deleteAvtalemal(avtalemal.uuid)}
+                          publishDisabled={
+                            !!avtalemal.publisert &&
+                            avtalemal.publishedTo.length === kommuner.length
+                          }
+                          deleteDisabled={!!avtalemal.publisert}
+                        />
+                      </VStack>
+                    </Accordion.Content>
+                  </Accordion.Item>
+                );
+              })}
               {avtalemaler.length === 0 && (
                 <BodyShort>Ingen avtalemaler enda</BodyShort>
               )}
-            </VStack>
+            </Accordion>
             <Button
               style={{ marginTop: "1rem" }}
               onClick={() => {
