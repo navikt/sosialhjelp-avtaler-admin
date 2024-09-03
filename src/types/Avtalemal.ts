@@ -4,6 +4,7 @@ export interface Avtalemal {
   publisert: string;
   uuid: string;
   previewUrl: string;
+  exampleUrl: string;
   replacementMap: Record<string, Replacement>;
   publishedTo: Array<string>
 }

@@ -6,6 +6,7 @@ interface Props {
   onClickPreview: () => void;
   onClickPublish: () => void;
   onClickDelete: () => void;
+  onClickExample: () => void;
   publishDisabled: boolean;
   deleteDisabled: boolean;
 }
@@ -16,9 +17,13 @@ const ButtonRow = ({
   publishDisabled,
   onClickPublish,
   onClickDelete,
+  onClickExample
 }: Props): React.JSX.Element => {
   return (
     <HStack gap="4">
+      <Button variant="secondary" onClick={onClickExample}>
+        Se eksempel-pdf
+      </Button>
       <Button variant="secondary" onClick={onClickPreview}>
         Forhåndsvis med eksempeldata
       </Button>

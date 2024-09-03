@@ -124,6 +124,12 @@ export default function Home({ avtalemaler, kommuner }: Props) {
                       )}
                     </VStack>
                     <ButtonRow
+                      onClickExample={() => {
+                        setPreviewUrl(
+                          `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.exampleUrl}`,
+                        );
+                        previewModalRef.current?.showModal();
+                      }}
                       onClickPreview={() => {
                         setPreviewUrl(
                           `/sosialhjelp/avtaler-admin/api/avtalemal${avtalemal.previewUrl}`,

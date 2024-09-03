@@ -31,6 +31,7 @@ interface MetadataFormData {
 interface FormValues {
   name: string;
   files: FileObject[];
+  examplePdfs: FileObject[];
   map: [string, string][];
   ingress: string;
   ingressNynorsk: string;
@@ -52,6 +53,7 @@ const NyAvtalemalModal = (
     useForm<FormValues>({
       defaultValues: {
         files: [],
+        examplePdfs: [],
         map: [["", ""]],
         name: "",
         ingress: "",
@@ -73,6 +75,7 @@ const NyAvtalemalModal = (
   const onSubmit = (data: FormValues) => {
     const formData = new FormData();
     formData.append("file", data.files[0].file, data.files[0].file.name);
+    formData.append("examplePdf", data.examplePdfs[0].file, data.examplePdfs[0].file.name);
     formData.append(
       "metadata",
       JSON.stringify({
@@ -142,6 +145,34 @@ const NyAvtalemalModal = (
                 control={control}
               />
               {watch("files").map((file) => (
+                <UNSAFE_FileUpload.Item
+                  key={file.file.name}
+                  file={file.file}
+                  button={{
+                    action: "delete",
+                    onClick: () => reset({ files: [] }),
+                  }}
+                />
+              ))}
+              <Controller
+                rules={{
+                  required: "Påkrevd",
+                  minLength: { value: 1, message: "Må laste opp fil" },
+                }}
+                render={({ field, fieldState }) => (
+                  <UNSAFE_FileUpload.Dropzone
+                    label="Last opp eksempelavtale her"
+                    fileLimit={{ max: 1, current: field.value.length }}
+                    multiple={false}
+                    accept={".pdf"}
+                    onSelect={field.onChange}
+                    error={fieldState.error?.message}
+                  />
+                )}
+                name={"examplePdfs"}
+                control={control}
+              />
+              {watch("examplePdfs").map((file) => (
                 <UNSAFE_FileUpload.Item
                   key={file.file.name}
                   file={file.file}
