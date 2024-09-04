@@ -45,27 +45,35 @@ const options = [
   { label: "Dato", value: "DATO" },
 ];
 
+const defaultValues: FormValues = {
+  files: [],
+  examplePdfs: [],
+  map: [["", ""]],
+  name: "",
+  ingress: "",
+  ingressNynorsk: "",
+  kvitteringstekst: "",
+  kvitteringstekstNynorsk: "",
+};
 const NyAvtalemalModal = (
   { submit }: Props,
   ref: ForwardedRef<HTMLDialogElement>,
 ): React.JSX.Element => {
-  const { register, handleSubmit, control, reset, watch, formState } =
-    useForm<FormValues>({
-      defaultValues: {
-        files: [],
-        examplePdfs: [],
-        map: [["", ""]],
-        name: "",
-        ingress: "",
-        ingressNynorsk: "",
-        kvitteringstekst: "",
-        kvitteringstekstNynorsk: "",
-      },
-    });
+  const {
+    register,
+    handleSubmit,
+    control,
+    resetField,
+    watch,
+    formState,
+    reset,
+  } = useForm<FormValues>({
+    defaultValues,
+  });
   const { fields, append, remove } = useFieldArray({ control, name: "map" });
 
   const close = () => {
-    reset();
+    reset(defaultValues);
     if (typeof ref === "function") {
       ref(null);
     } else {
@@ -75,7 +83,11 @@ const NyAvtalemalModal = (
   const onSubmit = (data: FormValues) => {
     const formData = new FormData();
     formData.append("file", data.files[0].file, data.files[0].file.name);
-    formData.append("examplePdf", data.examplePdfs[0].file, data.examplePdfs[0].file.name);
+    formData.append(
+      "examplePdf",
+      data.examplePdfs[0].file,
+      data.examplePdfs[0].file.name,
+    );
     formData.append(
       "metadata",
       JSON.stringify({
@@ -99,7 +111,10 @@ const NyAvtalemalModal = (
             <TextField
               label="Navn"
               error={formState.errors.name?.message}
-              {...register("name", { required: "Påkrevd", maxLength: {value: 80, message: "Maks 80 tegn"} })}
+              {...register("name", {
+                required: "Påkrevd",
+                maxLength: { value: 80, message: "Maks 80 tegn" },
+              })}
             />
             <HStack gap="2">
               <Textarea
@@ -142,6 +157,7 @@ const NyAvtalemalModal = (
                   />
                 )}
                 name={"files"}
+                shouldUnregister={false}
                 control={control}
               />
               {watch("files").map((file) => (
@@ -150,7 +166,7 @@ const NyAvtalemalModal = (
                   file={file.file}
                   button={{
                     action: "delete",
-                    onClick: () => reset({ files: [] }),
+                    onClick: () => resetField("files", { defaultValue: [] }),
                   }}
                 />
               ))}
@@ -178,7 +194,8 @@ const NyAvtalemalModal = (
                   file={file.file}
                   button={{
                     action: "delete",
-                    onClick: () => reset({ files: [] }),
+                    onClick: () =>
+                      resetField("examplePdfs", { defaultValue: [] }),
                   }}
                 />
               ))}
