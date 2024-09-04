@@ -1,18 +1,20 @@
 name: "Build Image and Deploy to prod"
 run-name: Deploying ${{ github.ref_name }} to prod
 on:
+  push:
+    branches:
+      - "main"
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE_POSTFIX: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}
+  DOCKER_IMAGE_POSTFIX: prod
 
 jobs:
   build-image:
     name: "Build Image for Deploy"
     runs-on: ubuntu-latest
     permissions:
-      packages: write
-      contents: write
+      contents: read
       id-token: write
     outputs:
       image-tag: ${{ steps.artifact-version.outputs.version }}
@@ -22,7 +24,7 @@ jobs:
       - name: "Copy appropriate env file to root"
         shell: bash
         run: |
-          echo "Copying nais/envs/.env.dev..."
+          echo "Copying nais/envs/.env.production..."
           cp nais/envs/.env.production .env.production
 
       - name: "Build npm project"
@@ -43,38 +45,20 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
 
-      - name: "Create artifact version"
-        id: artifact-version
-        uses: navikt/sosialhjelp-ci/actions/create-artifact-version@main
-
-      - name: "Release Tag"
-        uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+      - uses: nais/docker-build-push@v0
+        id: docker-build-push
         with:
-          tag: ${{ steps.artifact-version.outputs.version }}
-          commit: ${{ github.sha }}
-          allowUpdates: true
+          team: teamdigisos
+          image_suffix: ${{ env.DOCKER_IMAGE_POSTFIX }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
 
-      - name: "Build and Push Docker Image"
-        uses: navikt/sosialhjelp-ci/actions/build-and-push-docker-image@main
-        with:
-          artifact-version: ${{ steps.artifact-version.outputs.version }}
-          image-name: ${{ env.DOCKER_IMAGE_POSTFIX }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-  deploy-gcp:
-    name: "Deploy to production"
-    needs: build-image
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
       - name: "Deploy til prod"
         uses: nais/deploy/actions/deploy@v1
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais/prod/prod.yaml
+          VAR: image=${{ steps.docker-build-push.outputs.image }}
           CLUSTER: prod-gcp
           REF: ${{ github.sha }}
           PRINT_PAYLOAD: true
-          IMAGE: ${{ env.DOCKER_IMAGE_POSTFIX }}:${{ needs.build-image.outputs.image-tag }}
