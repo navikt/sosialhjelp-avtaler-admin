@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_IMAGE_POSTFIX: ghcr.io/${{ github.repository }}/${{ github.event.repository.name }}-dev
+  DOCKER_IMAGE_POSTFIX: -dev
 
 jobs:
   build-image:
@@ -59,12 +59,14 @@ jobs:
           commit: ${{ github.sha }}
           allowUpdates: true
 
-      - name: "Build and Push Docker Image"
-        uses: navikt/sosialhjelp-ci/actions/build-and-push-docker-image@main
+      - uses: nais/docker-build-push@v0
+        id: docker-push
         with:
-          artifact-version: ${{ steps.artifact-version.outputs.version }}
-          image-name: ${{ env.DOCKER_IMAGE_POSTFIX }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          team: teamdigisos
+          tag: ${{ steps.artifact-version.outputs.version }}
+          image_suffix: ${{ env.DOCKER_IMAGE_POSTFIX }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # required, but is defined as an organization variable
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # required, but is defined as an organization secret
 
   deploy-gcp:
     name: "Deploy to development"
@@ -73,7 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: "Deploy til dev"
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais/dev/dev.yaml
