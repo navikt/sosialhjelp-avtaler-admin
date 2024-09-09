@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, HStack } from "@navikt/ds-react";
 import { TrashIcon } from "@navikt/aksel-icons";
+import Link from "next/link";
 
 interface Props {
   onClickPreview: () => void;
@@ -9,6 +10,7 @@ interface Props {
   onClickExample: () => void;
   publishDisabled: boolean;
   deleteDisabled: boolean;
+  publiseringsinfoHref: string;
 }
 
 const ButtonRow = ({
@@ -17,7 +19,8 @@ const ButtonRow = ({
   publishDisabled,
   onClickPublish,
   onClickDelete,
-  onClickExample
+  onClickExample,
+  publiseringsinfoHref,
 }: Props): React.JSX.Element => {
   return (
     <HStack gap="4">
@@ -36,6 +39,7 @@ const ButtonRow = ({
         icon={<TrashIcon />}
         onClick={onClickDelete}
       />
+      <Button variant="secondary" as={Link} href={publiseringsinfoHref}>Signeringsinfo</Button>
     </HStack>
   );
 };

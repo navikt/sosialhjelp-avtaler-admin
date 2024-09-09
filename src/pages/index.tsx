@@ -12,7 +12,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import styles from "../styles/Home.module.css";
-import { ArrowRightIcon, FileIcon } from "@navikt/aksel-icons";
+import { FileIcon } from "@navikt/aksel-icons";
 import React, { useRef, useState } from "react";
 import NyAvtalemalModal from "@/components/modal/NyAvtalemalModal";
 import { Avtalemal, Replacement } from "@/types/Avtalemal";
@@ -179,6 +179,7 @@ export default function Home({ avtalemaler, kommuner }: Props) {
                             avtalemal.publishedTo.length === kommuner.length
                           }
                           deleteDisabled={!!avtalemal.publisert}
+                          publiseringsinfoHref={`/${avtalemal.uuid}/publiseringsinfo`}
                         />
                       </VStack>
                     </Accordion.Content>
