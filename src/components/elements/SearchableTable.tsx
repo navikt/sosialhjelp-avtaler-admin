@@ -11,14 +11,15 @@ interface Props {
   rows: TableRow[];
 }
 
-interface TableRow {
+export interface TableRow {
   orgnr: string;
   navn: string;
   signert: boolean;
+  timestamp: Date | null;
 }
 
 interface ScopedSortState extends SortState {
-  orderBy: "orgnr" | "navn" | "signert";
+  orderBy: "orgnr" | "navn" | "signert" | "timestamp";
 }
 
 const rowsPerPage = 50;
@@ -35,7 +36,10 @@ function comparator<T>(a: T, b: T, orderBy: keyof T): number {
 
 const SearchableTable = ({ rows }: Props): React.JSX.Element => {
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState<ScopedSortState | undefined>();
+  const [sort, setSort] = useState<ScopedSortState | undefined>({
+    orderBy: "timestamp",
+    direction: "descending",
+  });
   const [search, setSearch] = useState<string>("");
   const handleSort = (sortKey: ScopedSortState["orderBy"]) => {
     setSort(
@@ -91,6 +95,9 @@ const SearchableTable = ({ rows }: Props): React.JSX.Element => {
             <Table.ColumnHeader sortKey="signert" sortable>
               Har signert
             </Table.ColumnHeader>
+            <Table.ColumnHeader sortKey="timestamp" sortable>
+              Signeringstidspunkt
+            </Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -99,6 +106,9 @@ const SearchableTable = ({ rows }: Props): React.JSX.Element => {
               <Table.DataCell>{row.orgnr}</Table.DataCell>
               <Table.DataCell>{row.navn}</Table.DataCell>
               <Table.DataCell>{row.signert ? "Ja" : "Nei"}</Table.DataCell>
+              <Table.DataCell>
+                {row.timestamp?.toLocaleString() ?? "-"}
+              </Table.DataCell>
             </Table.Row>
           ))}
         </Table.Body>
