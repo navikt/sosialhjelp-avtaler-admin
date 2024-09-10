@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Page, Heading, Box, VStack, SortState } from "@navikt/ds-react";
 import { getOboToken, withAuthenticatedPage } from "@/auth/withAuth";
 import dynamic from "next/dynamic";
+import { TableRow } from "@/components/elements/SearchableTable";
 
 const PieChart = dynamic(() => import("@/components/elements/PieChart"), {
   ssr: false,
@@ -14,13 +15,21 @@ const SearchableTable = dynamic(
 );
 
 interface Props {
-  publiseringsinfo: Publiseringsinfo;
+  publiseringsinfo: Publiseringsinfo[];
 }
 
 const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
-  const unsigned = Object.values(publiseringsinfo.unsignedOrgnrs).length;
-  const signed = Object.values(publiseringsinfo.signedOrgnrs).length;
-  const totalNumber = unsigned + signed;
+  const unsigned = publiseringsinfo.filter(
+    (avtale) => !avtale.hasSigned,
+  ).length;
+  const signed = publiseringsinfo.filter((avtale) => avtale.hasSigned).length;
+  const totalNumber = publiseringsinfo.length;
+  const data: TableRow[] = publiseringsinfo.map((avtale) => ({
+    orgnr: avtale.orgnr,
+    navn: avtale.name,
+    timestamp: avtale.signedAt ? new Date(avtale.signedAt) : null,
+    signert: avtale.hasSigned,
+  }));
   return (
     <Page contentBlockPadding="end">
       <Page.Block gutters>
@@ -48,24 +57,7 @@ const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
               },
             ]}
           />
-          <SearchableTable
-            rows={[
-              ...Object.entries(publiseringsinfo.unsignedOrgnrs).map(
-                ([orgnr, navn]) => ({
-                  orgnr,
-                  navn,
-                  signert: false,
-                }),
-              ),
-              ...Object.entries(publiseringsinfo.signedOrgnrs).map(
-                ([orgnr, navn]) => ({
-                  orgnr,
-                  navn,
-                  signert: true,
-                }),
-              ),
-            ]}
-          />
+          <SearchableTable rows={data} />
         </Box>
       </Page.Block>
     </Page>
@@ -83,17 +75,16 @@ export const getServerSideProps = withAuthenticatedPage(
 );
 
 export interface Publiseringsinfo {
-  signedOrgnrs: Record<string, string>;
-  unsignedOrgnrs: Record<string, string>;
+  orgnr: string;
+  name: string;
+  hasSigned: boolean;
+  signedAt: string | null;
 }
 
 const fetchPubliseringsinfo = async (
   token: string,
   uuid: string,
-): Promise<{
-  signedOrgnrs: Record<string, string>;
-  unsignedOrgnrs: Record<string, string>;
-}> => {
+): Promise<Publiseringsinfo[]> => {
   const url = `http://${process.env.NEXT_AVTALER_API_HOSTNAME}/sosialhjelp/avtaler-api/api/avtalemal/${uuid}/stats`;
   const oboToken = await getOboToken(token);
 
