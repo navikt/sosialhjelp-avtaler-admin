@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Page, Heading, Box, VStack, SortState } from "@navikt/ds-react";
 import { getOboToken, withAuthenticatedPage } from "@/auth/withAuth";
 import dynamic from "next/dynamic";
+
 const PieChart = dynamic(() => import("@/components/elements/PieChart"), {
   ssr: false,
 });
@@ -22,14 +23,14 @@ const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
   const totalNumber = unsigned + signed;
   return (
     <Page contentBlockPadding="end">
-      <Box>
-        <Page.Block gutters>
+      <Page.Block gutters>
+        <Box>
           <Heading size="xlarge">Publiseringsinfo</Heading>
-        </Page.Block>
-      </Box>
+        </Box>
+      </Page.Block>
 
-      <VStack gap="4">
-        <Page.Block gutters>
+      <Page.Block gutters>
+        <Box>
           <Heading size="large">Signeringstatus:</Heading>
           <PieChart
             data={[
@@ -65,8 +66,8 @@ const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
               ),
             ]}
           />
-        </Page.Block>
-      </VStack>
+        </Box>
+      </Page.Block>
     </Page>
   );
 };

@@ -69,9 +69,10 @@ const SearchableTable = ({ rows }: Props): React.JSX.Element => {
     page * rowsPerPage,
   );
   return (
-    <VStack gap="4">
+    <VStack gap="4" style={{ maxWidth: "800px" }}>
       <TextField
         label={"Søk her"}
+        style={{ maxWidth: "300px" }}
         onChange={(e) => setSearch(e.currentTarget.value)}
         value={search}
       />
