@@ -33,7 +33,7 @@ function comparator<T>(a: T, b: T, orderBy: keyof T): number {
   return 0;
 }
 
-const SearchableTable = ({rows}: Props): React.JSX.Element => {
+const SearchableTable = ({ rows }: Props): React.JSX.Element => {
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<ScopedSortState | undefined>();
   const [search, setSearch] = useState<string>("");
@@ -52,7 +52,9 @@ const SearchableTable = ({rows}: Props): React.JSX.Element => {
   };
 
   const filtered = rows.filter(
-    (row) => row.navn.includes(search) || row.orgnr.includes(search),
+    (row) =>
+      row.navn.toLowerCase().includes(search.toLowerCase()) ||
+      row.orgnr.includes(search),
   );
   const sortedData = filtered.slice().sort((a, b) => {
     if (sort) {
