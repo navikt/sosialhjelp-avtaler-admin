@@ -1,4 +1,4 @@
-import { BodyShort, Box } from "@navikt/ds-react";
+import { Box } from "@navikt/ds-react";
 import React from "react";
 import { PieChart as MinimalPieChart } from "react-minimal-pie-chart";
 import { Data } from "react-minimal-pie-chart/types/commonTypes";

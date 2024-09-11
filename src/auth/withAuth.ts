@@ -4,11 +4,7 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import {
-  getToken, requestAzureOboToken, requestOboToken,
-  requestTokenxOboToken,
-  validateAzureToken,
-} from "@navikt/oasis";
+import { getToken, requestOboToken, validateAzureToken } from "@navikt/oasis";
 
 type ApiHandler<Response> = (
   req: NextApiRequest,
