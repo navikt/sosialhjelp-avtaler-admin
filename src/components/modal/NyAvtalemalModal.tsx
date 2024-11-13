@@ -1,14 +1,13 @@
 import React, { ForwardedRef, forwardRef } from "react";
 import {
   Button,
-  FileObject,
+  FileObject, FileUpload,
   HStack,
   List,
   Modal,
   Textarea,
   TextField,
   UNSAFE_Combobox,
-  UNSAFE_FileUpload,
   VStack,
 } from "@navikt/ds-react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -147,7 +146,7 @@ const NyAvtalemalModal = (
                   minLength: { value: 1, message: "Må laste opp fil" },
                 }}
                 render={({ field, fieldState }) => (
-                  <UNSAFE_FileUpload.Dropzone
+                  <FileUpload.Dropzone
                     label="Last opp avtalemalen her"
                     fileLimit={{ max: 1, current: field.value.length }}
                     multiple={false}
@@ -161,7 +160,7 @@ const NyAvtalemalModal = (
                 control={control}
               />
               {watch("files").map((file) => (
-                <UNSAFE_FileUpload.Item
+                <FileUpload.Item
                   key={file.file.name}
                   file={file.file}
                   button={{
@@ -176,7 +175,7 @@ const NyAvtalemalModal = (
                   minLength: { value: 1, message: "Må laste opp fil" },
                 }}
                 render={({ field, fieldState }) => (
-                  <UNSAFE_FileUpload.Dropzone
+                  <FileUpload.Dropzone
                     label="Last opp eksempelavtale her"
                     fileLimit={{ max: 1, current: field.value.length }}
                     multiple={false}
@@ -189,7 +188,7 @@ const NyAvtalemalModal = (
                 control={control}
               />
               {watch("examplePdfs").map((file) => (
-                <UNSAFE_FileUpload.Item
+                <FileUpload.Item
                   key={file.file.name}
                   file={file.file}
                   button={{
