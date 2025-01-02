@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import {
+  Button,
   Pagination,
   SortState,
   Table,
   TextField,
   VStack,
 } from "@navikt/ds-react";
+import { DownloadIcon } from "@navikt/aksel-icons";
+import Link from "next/link";
 
 interface Props {
   rows: TableRow[];
@@ -16,6 +19,7 @@ export interface TableRow {
   navn: string;
   signert: boolean;
   timestamp: Date | null;
+  downloadUrl?: string | null;
 }
 
 interface ScopedSortState extends SortState {
@@ -98,6 +102,9 @@ const SearchableTable = ({ rows }: Props): React.JSX.Element => {
             <Table.ColumnHeader sortKey="timestamp" sortable>
               Signeringstidspunkt
             </Table.ColumnHeader>
+            <Table.ColumnHeader sortKey="timestamp" sortable>
+              Last ned signert dokument
+            </Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -108,6 +115,17 @@ const SearchableTable = ({ rows }: Props): React.JSX.Element => {
               <Table.DataCell>{row.signert ? "Ja" : "Nei"}</Table.DataCell>
               <Table.DataCell>
                 {row.timestamp?.toLocaleString() ?? "-"}
+              </Table.DataCell>
+              <Table.DataCell>
+                {row.signert && (
+                  <Button
+                    icon={<DownloadIcon />}
+                    as={Link}
+                    href={"/api/avtalemal" + row.downloadUrl}
+                  >
+                    Last ned
+                  </Button>
+                )}
               </Table.DataCell>
             </Table.Row>
           ))}
