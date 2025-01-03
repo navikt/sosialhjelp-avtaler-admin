@@ -11,26 +11,26 @@
     "test": "echo \"Dette er en testfri app\""
   },
   "dependencies": {
-    "@navikt/ds-css": "^7.5.1",
-    "@navikt/ds-react": "^7.5.1",
+    "@navikt/ds-css": "^7.9.0",
+    "@navikt/ds-react": "^7.9.0",
     "@navikt/next-api-proxy": "^4.1.2",
-    "@navikt/oasis": "^3.4.0",
-    "next": "^15.0.3",
+    "@navikt/oasis": "^3.6.0",
+    "next": "^15.1.3",
     "pdfobject": "^2.3.0",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.53.2",
+    "react-hook-form": "^7.54.2",
     "react-minimal-pie-chart": "^8.4.1",
-    "swr": "^2.2.5"
+    "swr": "^2.3.0"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.10.5",
     "@types/pdfobject": "^2.2.5",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "eslint": "^9.14.0",
-    "eslint-config-next": "^15.0.3",
-    "prettier": "^3.3.3",
-    "typescript": "^5.6.3"
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^15.1.3",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
   }
 }
