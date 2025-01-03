@@ -54,9 +54,8 @@ jobs:
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
 
       - name: "Deploy til prod"
-        uses: nais/deploy/actions/deploy@v1
+        uses: nais/deploy/actions/deploy@v2
         env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           RESOURCE: nais/prod/prod.yaml
           VAR: image=${{ steps.docker-build-push.outputs.image }}
           CLUSTER: prod-gcp
