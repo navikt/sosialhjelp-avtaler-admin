@@ -45,7 +45,7 @@ const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
       </Page.Block>
 
       <Page.Block gutters>
-        <VStack gap="4">
+        <VStack gap="4" align="start">
           <Heading size="large">Signeringstatus:</Heading>
           <PieChart
             data={[
