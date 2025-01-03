@@ -1,16 +1,11 @@
 import React from "react";
-import {
-  Page,
-  Heading,
-  Box,
-  Button,
-} from "@navikt/ds-react";
+import { Page, Heading, Box, Button, VStack } from "@navikt/ds-react";
 import { getOboToken, withAuthenticatedPage } from "@/auth/withAuth";
 import dynamic from "next/dynamic";
 import { TableRow } from "@/components/elements/SearchableTable";
 import { DownloadIcon } from "@navikt/aksel-icons";
 import Link from "next/link";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 const PieChart = dynamic(() => import("@/components/elements/PieChart"), {
   ssr: false,
@@ -28,7 +23,7 @@ interface Props {
 
 const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
   const router = useRouter();
-  const {uuid} = router.query
+  const { uuid } = router.query;
   const unsigned = publiseringsinfo.filter(
     (avtale) => !avtale.hasSigned,
   ).length;
@@ -50,7 +45,7 @@ const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
       </Page.Block>
 
       <Page.Block gutters>
-        <Box>
+        <VStack gap="4">
           <Heading size="large">Signeringstatus:</Heading>
           <PieChart
             data={[
@@ -69,7 +64,7 @@ const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
             ]}
           />
           <Button
-            icon={<DownloadIcon aria-hidden={true}/>}
+            icon={<DownloadIcon aria-hidden={true} />}
             as={Link}
             href={`/api/avtalemal/sosialhjelp/avtaler-api/api/avtalemal/${uuid}/avtale/signerte-avtaler`}
             target="_blank"
@@ -77,7 +72,7 @@ const Publiseringsinfo = ({ publiseringsinfo }: Props): React.JSX.Element => {
             Last ned alle avtaler
           </Button>
           <SearchableTable rows={data} />
-        </Box>
+        </VStack>
       </Page.Block>
     </Page>
   );
