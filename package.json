@@ -11,8 +11,8 @@
     "test": "echo \"Dette er en testfri app\""
   },
   "dependencies": {
-    "@navikt/ds-css": "^7.9.0",
-    "@navikt/ds-react": "^7.9.0",
+    "@navikt/ds-css": "^7.10.0",
+    "@navikt/ds-react": "^7.10.0",
     "@navikt/next-api-proxy": "^4.1.3",
     "@navikt/oasis": "^3.6.0",
     "next": "^15.1.3",
@@ -24,11 +24,11 @@
     "swr": "^2.3.0"
   },
   "devDependencies": {
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.12.0",
     "@types/pdfobject": "^2.2.5",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
-    "eslint": "^9.17.0",
+    "eslint": "^9.19.0",
     "eslint-config-next": "^15.1.3",
     "prettier": "^3.4.2",
     "typescript": "^5.7.2"
