@@ -1,6 +1,6 @@
 # sosialhjelp-avtaler-admin
 
-Dette er adminpanel til støtte for avtaleløsningen ([sosialhjelp-avtaler](https://github.com/navikt/sosialhjelp-avtaler) og [sosialhjelp-avtaler-api](https://github.com/navikt/sosialhjelp-avtaler-api)), der kommunene signerer databehandleravtaler med Nav. I adminpanelet kan avtalemaler lages og publiseres.
+Adminpanel til støtte for avtaleløsningen ([sosialhjelp-avtaler](https://github.com/navikt/sosialhjelp-avtaler) og [sosialhjelp-avtaler-api](https://github.com/navikt/sosialhjelp-avtaler-api)), der kommunene signerer databehandleravtaler med Nav. I adminpanelet kan avtalemaler lages og publiseres.
 
 ## Komme i gang
 
