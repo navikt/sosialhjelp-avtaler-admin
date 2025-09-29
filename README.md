@@ -16,7 +16,7 @@ npm install
 npm run dev
 ```
 
-Gå til `localhost:3008/sosialhjelp/admin-avtaler`
+Gå til `localhost:3000/sosialhjelp/admin-avtaler`
 
 ## Henvendelser
 
