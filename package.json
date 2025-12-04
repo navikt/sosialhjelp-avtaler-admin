@@ -12,6 +12,7 @@
     "test": "echo \"Dette er en testfri app\""
   },
   "dependencies": {
+    "@navikt/aksel-icons": "^7.31.0",
     "@navikt/ds-css": "^7.31.0",
     "@navikt/ds-react": "^7.31.0",
     "@navikt/next-api-proxy": "^4.1.4",
