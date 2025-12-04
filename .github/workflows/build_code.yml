@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: "Build npm project and run Tests"
-        uses: navikt/sosialhjelp-ci/actions/build-npm@main
+        uses: navikt/sosialhjelp-ci/actions/build-node@v12
         with:
           node-version: 22
           build-less: "false"
