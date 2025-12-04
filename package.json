@@ -19,8 +19,8 @@
     "@navikt/oasis": "^3.8.0",
     "next": "^15.5.7",
     "pdfobject": "^2.3.1",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react": "^19.1.2",
+    "react-dom": "^19.1.2",
     "react-hook-form": "^7.63.0",
     "react-minimal-pie-chart": "^9.1.1",
     "swr": "^2.3.6"
