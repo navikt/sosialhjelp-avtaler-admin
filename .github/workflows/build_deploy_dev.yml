@@ -27,8 +27,8 @@ jobs:
           echo "Copying nais/envs/.env.dev..."
           cp nais/envs/.env.dev .env.production
 
-      - name: "Build npm project"
-        uses: navikt/sosialhjelp-ci/actions/build-npm@main
+      - name: "@Build pnpm project"
+        uses: navikt/sosialhjelp-ci/actions/build-node@v12
         with:
           node-version: 22
           build-less: "false"

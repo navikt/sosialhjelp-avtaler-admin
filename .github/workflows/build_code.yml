@@ -18,8 +18,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Build npm project and run Tests"
-        uses: navikt/sosialhjelp-ci/actions/build-npm@main
+      - name: "Build pnpm project and run Tests"
+        uses: navikt/sosialhjelp-ci/actions/build-node@v12
         with:
           node-version: 22
           build-less: "false"

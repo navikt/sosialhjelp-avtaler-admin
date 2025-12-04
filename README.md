@@ -9,11 +9,11 @@ For å kjøre appen lokalt, må backend kjøre (sosialhjelp-avtaler-api).
 Variabel som må legges til i env.local:
 `NEXT_AVTALER_API_HOSTNAME="localhost"`
 
-Sosialhjelp-avtaler-admin er et Next-project som bruker npm. For å bygge og kjøre prosjektet gjør man følgende:
+Sosialhjelp-avtaler-admin er et Next-project som bruker pnpm. For å bygge og kjøre prosjektet gjør man følgende:
 
 ```
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 Gå til `localhost:3000/sosialhjelp/admin-avtaler`
