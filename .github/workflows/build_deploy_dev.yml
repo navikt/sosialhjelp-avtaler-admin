@@ -28,7 +28,7 @@ jobs:
           cp nais/envs/.env.dev .env.production
 
       - name: "@Build pnpm project"
-        uses: navikt/sosialhjelp-ci/actions/build-node@v12
+        uses: navikt/sosialhjelp-ci/actions/build-node@v17
         with:
           node-version: 22
           build-less: "false"
