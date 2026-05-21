@@ -5,6 +5,7 @@ on:
     branches:
       - "main"
   workflow_dispatch:
+  workflow_call:
 
 env:
   DOCKER_IMAGE_POSTFIX: prod
@@ -19,7 +20,7 @@ jobs:
     outputs:
       image-tag: ${{ steps.artifact-version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: "Copy appropriate env file to root"
         shell: bash
@@ -28,7 +29,7 @@ jobs:
           cp nais/envs/.env.production .env.production
 
       - name: "Build pnpm project"
-        uses: navikt/sosialhjelp-ci/actions/build-node@v12
+        uses: navikt/sosialhjelp-ci/actions/build-node@v19
         with:
           node-version: 22
           build-less: "false"
