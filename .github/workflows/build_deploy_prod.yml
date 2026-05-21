@@ -5,7 +5,8 @@ on:
     branches:
       - "main"
   workflow_dispatch:
-  workflow_call:
+  schedule:
+    - cron: "0 2 * * *"
 
 env:
   DOCKER_IMAGE_POSTFIX: prod
