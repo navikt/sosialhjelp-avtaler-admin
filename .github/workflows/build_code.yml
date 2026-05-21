@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: "Build pnpm project and run Tests"
-        uses: navikt/sosialhjelp-ci/actions/build-node@v12
+        uses: navikt/sosialhjelp-ci/actions/build-node@v20
         with:
           node-version: 22
           build-less: "false"
