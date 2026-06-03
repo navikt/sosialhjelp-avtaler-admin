@@ -21,7 +21,7 @@ jobs:
     outputs:
       image-tag: ${{ steps.artifact-version.outputs.version }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6.0.2
 
       - name: "Copy appropriate env file to root"
         shell: bash
