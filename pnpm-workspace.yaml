@@ -1,6 +1,3 @@
-minimumReleaseAge: 10080
-minimumReleaseAgeExclude:
-  - next@15.5.9
-  - "@next/env@15.5.9"
-  - react@19.1.2
-  - react-dom@19.1.2
+allowBuilds:
+  sharp: false
+minimumReleaseAge: 2080
