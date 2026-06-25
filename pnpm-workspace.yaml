@@ -1,6 +1,6 @@
 allowBuilds:
   sharp: false
   unrs-resolver: false
-minimumReleaseAge: 2080
+minimumReleaseAge: 2880
 overrides:
   postcss: 8.5.15
