@@ -18,23 +18,24 @@ updates:
     schedule:
       interval: daily
     cooldown:
-       default-days: 7
-
-  - package-ecosystem: npm
-    directory: '/'
-    cooldown:
       default-days: 7
-    schedule:
-      interval: daily
-    # Set to 0 to disable version updates for npm dependencies (does not affect security-updates)
-    open-pull-requests-limit: 5
-    ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-patch" ]
+
+  - package-ecosystem: "npm"
+    directory: "/"
     registries:
       - npm-github
+    schedule:
+      interval: daily
     groups:
-      minor-patch:
+      patch-dependencies:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+      minor-dependencies:
+        patterns:
+          - "*"
         update-types:
           - "minor"
-          - "patch"
+    commit-message:
+      prefix: "[npm]"
