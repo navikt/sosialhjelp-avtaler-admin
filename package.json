@@ -17,13 +17,13 @@
     "@navikt/ds-react": "^7.40.0",
     "@navikt/next-api-proxy": "^4.1.7",
     "@navikt/oasis": "^3.8.0",
-    "next": "16.2.11",
+    "next": "16.3.4",
     "pdfobject": "^2.3.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-hook-form": "^7.80.0",
+    "react-hook-form": "^7.87.0",
     "react-minimal-pie-chart": "^9.1.2",
-    "swr": "^2.4.2"
+    "swr": "^2.5.1"
   },
   "devDependencies": {
     "@types/node": "^24.13.2",
@@ -32,7 +32,7 @@
     "@types/react-dom": "^19.2.5",
     "eslint": "^10.9.1",
     "eslint-config-next": "^16.2.11",
-    "prettier": "^3.8.4",
+    "prettier": "^3.9.6",
     "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@11.22.0+sha512.1ff870c4c6133dfd88fb2afc46dd13d47f09c9794b438c6fdb47ca98caf3bc16381ee0be93a091b8e3824cf01f889f46d7d9e20910fb0be1ab0fb5baa80dd621"
