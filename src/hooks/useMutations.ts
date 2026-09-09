@@ -1,7 +1,5 @@
 import { useRouter } from "next/router";
 
-
-
 const useMutations = () => {
   const post = usePost();
   const doDelete = useDelete();
@@ -19,7 +17,6 @@ const useMutations = () => {
     });
 
   const publishAvtalemal = async (uuid: string, body?: string) =>
-    
     post({
       url: `/sosialhjelp/avtaler-admin/api/avtalemal/sosialhjelp/avtaler-api/api/avtalemal/${uuid}/publiser`,
       body,

@@ -5,9 +5,11 @@ const fetcher = (...args: Parameters<typeof fetch>) =>
 
 const usePublishingPolling = (enabled: boolean, uuid: string | null) => {
   const { data, error, isLoading } = useSWR<Publisering[]>(
-    enabled && uuid ? `/sosialhjelp/avtaler-admin/api/avtalemal/sosialhjelp/avtaler-api/api/avtalemal/${uuid}/publiser/status` : null,
+    enabled && uuid
+      ? `/sosialhjelp/avtaler-admin/api/avtalemal/sosialhjelp/avtaler-api/api/avtalemal/${uuid}/publiser/status`
+      : null,
     fetcher,
-    { refreshInterval: 500, },
+    { refreshInterval: 500 },
   );
   return { data, error, isLoading };
 };
