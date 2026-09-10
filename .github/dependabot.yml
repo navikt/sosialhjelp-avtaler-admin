@@ -6,7 +6,7 @@ registries:
     token: ${{ secrets.READER_TOKEN }}
 updates:
   - package-ecosystem: github-actions
-    directory: '/'
+    directory: "/"
     schedule:
       interval: daily
     open-pull-requests-limit: 5
@@ -14,7 +14,7 @@ updates:
       default-days: 7
 
   - package-ecosystem: docker
-    directory: '/'
+    directory: "/"
     schedule:
       interval: daily
     cooldown:

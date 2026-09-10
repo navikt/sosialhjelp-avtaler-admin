@@ -89,7 +89,7 @@ export default function Home({ avtalemaler, kommuner }: Props) {
           <Page.Block>
             <Accordion headingSize="medium">
               {avtalemaler.map((avtalemal) => {
-                let replacements = Object.entries(avtalemal.replacementMap);
+                const replacements = Object.entries(avtalemal.replacementMap);
                 return (
                   <Accordion.Item key={avtalemal.uuid}>
                     <Accordion.Header>

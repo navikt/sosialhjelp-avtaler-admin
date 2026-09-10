@@ -1,8 +1,6 @@
 import { Box } from "@navikt/ds-react";
 import React from "react";
-import {
-  PieChart as MinimalPieChart,
-} from "react-minimal-pie-chart";
+import { PieChart as MinimalPieChart } from "react-minimal-pie-chart";
 import { Data } from "react-minimal-pie-chart/dist/commonTypes";
 
 interface Props {

@@ -1,0 +1,6 @@
+# Nais-manifester bruker {{ }}-templating som ikke er gyldig YAML.
+# Prettier feiltolker dette og ødelegger placeholderen (f.eks. {{ image }} -> { { image } }).
+nais/**/*.yaml
+
+# Generert fil, formattering eies av pnpm
+pnpm-lock.yaml

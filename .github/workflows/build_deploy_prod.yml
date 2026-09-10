@@ -32,7 +32,7 @@ jobs:
       - name: "Build pnpm project"
         uses: navikt/sosialhjelp-ci/actions/build-node@v21
         with:
-          node-version: 22
+          node-version: 24
           build-less: "false"
           reader-token: ${{ secrets.READER_TOKEN }}
           run-test: "false"

@@ -39,7 +39,9 @@ const ButtonRow = ({
         icon={<TrashIcon />}
         onClick={onClickDelete}
       />
-      <Button variant="secondary" as={Link} href={publiseringsinfoHref}>Signeringsinfo</Button>
+      <Button variant="secondary" as={Link} href={publiseringsinfoHref}>
+        Signeringsinfo
+      </Button>
     </HStack>
   );
 };
