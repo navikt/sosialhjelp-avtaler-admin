@@ -25,8 +25,8 @@ importers:
         specifier: ^7.40.0
         version: 7.40.0(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@navikt/next-api-proxy':
-        specifier: ^4.1.7
-        version: 4.1.7(next@16.3.4(@babel/core@7.29.7(supports-color@7.2.0))(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
+        specifier: ^5.0.5
+        version: 5.0.5(next@16.3.4(@babel/core@7.29.7(supports-color@7.2.0))(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))
       '@navikt/oasis':
         specifier: ^3.8.0
         version: 3.8.0
@@ -454,8 +454,8 @@ packages:
   '@navikt/ds-tokens@7.40.0':
     resolution: {integrity: sha512-zBaBKLS5R2OZyXI4UUPOmiB15L/u/aJPHiyoccJDtmqrv5wRkc1oM6UCjzKK0D4gLZHBoxp7YBT0sR9Mp4DXFQ==, tarball: https://npm.pkg.github.com/download/@navikt/ds-tokens/7.40.0/36f981e12d4d90f18155615b7666b737039a3ff0}
 
-  '@navikt/next-api-proxy@4.1.7':
-    resolution: {integrity: sha512-g/Z1JPVda6Gk6WTFFuT02io7wLF69+oBqGAsyEwht8K1JbCjK3tJtnex2RB6nG9guBhscDBqSXFYfeOC3v29Dg==, tarball: https://npm.pkg.github.com/download/@navikt/next-api-proxy/4.1.7/72af378e5f2c45676de7d77304c22e336f97c394}
+  '@navikt/next-api-proxy@5.0.5':
+    resolution: {integrity: sha512-Iu2hR3RSDqK9rvDGIHFQz5/sSlJ5NgoHr6tzjyyxa+jcvO5S0SivQcgxV1EAt6GkiMn99V8Fj74dT94RsabmIg==, tarball: https://npm.pkg.github.com/download/@navikt/next-api-proxy/5.0.5/6eb78866c7048f224e66d01d89e9e2669043cc69}
     engines: {node: 22 || 24}
     peerDependencies:
       next: 14 || 15 || 16
@@ -2345,7 +2345,7 @@ snapshots:
 
   '@navikt/ds-tokens@7.40.0': {}
 
-  '@navikt/next-api-proxy@4.1.7(next@16.3.4(@babel/core@7.29.7(supports-color@7.2.0))(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
+  '@navikt/next-api-proxy@5.0.5(next@16.3.4(@babel/core@7.29.7(supports-color@7.2.0))(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))':
     dependencies:
       next: 16.3.4(@babel/core@7.29.7(supports-color@7.2.0))(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
 
