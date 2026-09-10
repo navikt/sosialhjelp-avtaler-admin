@@ -2,6 +2,15 @@ allowBuilds:
   sharp: false
   unrs-resolver: false
 minimumReleaseAge: 2880
+peerDependencyRules:
+  allowedVersions:
+    # eslint-plugin-react and eslint-plugin-jsx-a11y (pulled in via eslint-config-next)
+    # have not yet published a release with peerDependencies covering ESLint 10.
+    # We've verified `pnpm lint` runs cleanly on ESLint 10.10.0 with the currently
+    # locked plugin versions (react@7.37.5, jsx-a11y@6.10.2). Remove this override
+    # once newer plugin releases declare ESLint 10 support.
+    eslint-plugin-react>eslint: "10"
+    eslint-plugin-jsx-a11y>eslint: "10"
 overrides:
   postcss: 8.5.23
   browserslist: 4.28.7
