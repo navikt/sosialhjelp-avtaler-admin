@@ -17,7 +17,7 @@
     "@navikt/ds-react": "^7.40.0",
     "@navikt/next-api-proxy": "^4.1.7",
     "@navikt/oasis": "^3.8.0",
-    "next": "16.3.4",
+    "next": "16.3.8",
     "pdfobject": "^2.3.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -31,7 +31,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "eslint": "^10.10.0",
-    "eslint-config-next": "^16.3.4",
+    "eslint-config-next": "^16.3.8",
     "prettier": "^3.9.6",
     "typescript": "^5.9.3"
   },
