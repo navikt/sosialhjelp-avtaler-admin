@@ -17,7 +17,7 @@
     "@navikt/ds-react": "^7.40.0",
     "@navikt/next-api-proxy": "^5.0.5",
     "@navikt/oasis": "^4.2.2",
-    "next": "16.4.3",
+    "next": "16.4.5",
     "pdfobject": "^2.3.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
